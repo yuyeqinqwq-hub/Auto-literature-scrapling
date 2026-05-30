@@ -54,6 +54,7 @@ class Article:
     keywords: list[str] = field(default_factory=list)
     authors: list[str] = field(default_factory=list)
     affiliations: list[str] = field(default_factory=list)
+    author_affiliations: list[tuple[str, str]] = field(default_factory=list)
     matched_concepts: list[str] = field(default_factory=list)
     matched_fields: list[str] = field(default_factory=list)
     source: str = ""
@@ -247,9 +248,25 @@ def clean_abstract(text: str) -> str:
     return re.sub(r"\s+", " ", unescape(text)).strip()
 
 
-def crossref_authors(item: dict[str, Any]) -> tuple[list[str], list[str]]:
+def add_unique(values: list[str], value: str) -> None:
+    value = re.sub(r"\s+", " ", str(value or "")).strip()
+    if value and value not in values:
+        values.append(value)
+
+
+def format_author_affiliations(pairs: list[tuple[str, str]]) -> str:
+    rows = []
+    for author, affiliation in pairs:
+        author_value = re.sub(r"\s+", " ", str(author or "")).strip() or "not available"
+        affiliation_value = re.sub(r"\s+", " ", str(affiliation or "")).strip() or "not available"
+        rows.append(f"{author_value} :: {affiliation_value}")
+    return " ~~ ".join(rows)
+
+
+def crossref_authors(item: dict[str, Any]) -> tuple[list[str], list[str], list[tuple[str, str]]]:
     authors: list[str] = []
     affiliations: list[str] = []
+    author_affiliations: list[tuple[str, str]] = []
     for author in item.get("author", []) or []:
         name = " ".join(
             part
@@ -261,11 +278,15 @@ def crossref_authors(item: dict[str, Any]) -> tuple[list[str], list[str]]:
         ).strip()
         if name:
             authors.append(name)
+        author_affs: list[str] = []
         for aff in author.get("affiliation", []) or []:
             aff_name = aff.get("name")
-            if aff_name and aff_name not in affiliations:
-                affiliations.append(aff_name)
-    return authors, affiliations
+            if aff_name:
+                add_unique(author_affs, aff_name)
+                add_unique(affiliations, aff_name)
+        if name:
+            author_affiliations.append((name, csv_value(author_affs) if author_affs else "not available"))
+    return authors, affiliations, author_affiliations
 
 
 def crossref_enrich_by_doi(article: Article) -> None:
@@ -289,12 +310,14 @@ def crossref_enrich_by_doi(article: Article) -> None:
         value = str(subject)
         if value and value not in article.keywords:
             article.keywords.append(value)
-    if not article.authors or not article.affiliations:
-        authors, affiliations = crossref_authors(item)
+    if not article.authors or not article.affiliations or not article.author_affiliations:
+        authors, affiliations, author_affiliations = crossref_authors(item)
         article.authors = article.authors or authors
         for affiliation in affiliations:
             if affiliation not in article.affiliations:
                 article.affiliations.append(affiliation)
+        if not article.author_affiliations:
+            article.author_affiliations = author_affiliations
     article.crossref_url = url
 
 
@@ -303,7 +326,7 @@ def article_from_crossref(item: dict[str, Any], journal_hint: str, source_url: s
     container = " ".join(item.get("container-title") or []).strip() or journal_hint
     doi = str(item.get("DOI", "") or "").lower().strip()
     abstract = clean_abstract(str(item.get("abstract", "") or ""))
-    authors, affiliations = crossref_authors(item)
+    authors, affiliations, author_affiliations = crossref_authors(item)
     publication_date = ""
     publication_source = ""
     for key in ["published-online", "published-print", "published", "issued", "created"]:
@@ -325,6 +348,7 @@ def article_from_crossref(item: dict[str, Any], journal_hint: str, source_url: s
         keywords=subjects,
         authors=authors,
         affiliations=affiliations,
+        author_affiliations=author_affiliations,
         source="Crossref",
         crossref_url=source_url,
         abstract_status="available" if abstract else "missing",
@@ -341,21 +365,29 @@ def reconstruct_openalex_abstract(index: dict[str, list[int]] | None) -> str:
     return " ".join(word for _, word in sorted(positions)).strip()
 
 
-def openalex_authors_and_affiliations(data: dict[str, Any]) -> tuple[list[str], list[str]]:
+def openalex_authors_and_affiliations(data: dict[str, Any]) -> tuple[list[str], list[str], list[tuple[str, str]]]:
     authors: list[str] = []
     affiliations: set[str] = set()
+    author_affiliations: list[tuple[str, str]] = []
     for authorship in data.get("authorships", []) or []:
         author_name = (authorship.get("author") or {}).get("display_name")
         if author_name:
             authors.append(author_name)
+        author_affs: list[str] = []
         for inst in authorship.get("institutions", []) or []:
             name = inst.get("display_name")
             if name:
                 affiliations.add(name)
+                add_unique(author_affs, name)
         for raw in authorship.get("raw_affiliation_strings", []) or []:
             if raw:
                 affiliations.add(raw)
-    return authors, sorted(affiliations)
+                add_unique(author_affs, raw)
+        if author_name:
+            author_affiliations.append(
+                (author_name, csv_value(author_affs) if author_affs else "not available")
+            )
+    return authors, sorted(affiliations), author_affiliations
 
 
 def openalex_keywords(data: dict[str, Any]) -> list[str]:
@@ -397,7 +429,7 @@ def openalex_source(data: dict[str, Any]) -> tuple[str, list[str], str]:
 
 def article_from_openalex(data: dict[str, Any]) -> Article:
     source_name, _, host = openalex_source(data)
-    authors, affiliations = openalex_authors_and_affiliations(data)
+    authors, affiliations, author_affiliations = openalex_authors_and_affiliations(data)
     abstract = reconstruct_openalex_abstract(data.get("abstract_inverted_index"))
     doi_url = data.get("doi", "") or ""
     doi = doi_url.replace("https://doi.org/", "").lower().strip()
@@ -417,6 +449,7 @@ def article_from_openalex(data: dict[str, Any]) -> Article:
         keywords=openalex_keywords(data),
         authors=authors,
         affiliations=affiliations,
+        author_affiliations=author_affiliations,
         source="OpenAlex",
         openalex_url=data.get("id", "") or "",
         abstract_status="available" if abstract else "missing",
@@ -457,24 +490,16 @@ def enrich_from_openalex(article: Article) -> None:
         if keyword not in article.keywords:
             article.keywords.append(keyword)
 
+    authors, affiliations, author_affiliations = openalex_authors_and_affiliations(data)
     if not article.authors:
-        authors = []
-        for authorship in data.get("authorships", []) or []:
-            author_name = (authorship.get("author") or {}).get("display_name")
-            if author_name:
-                authors.append(author_name)
         article.authors = authors
 
-    affiliations = set(article.affiliations)
-    for authorship in data.get("authorships", []) or []:
-        for inst in authorship.get("institutions", []) or []:
-            name = inst.get("display_name")
-            if name:
-                affiliations.add(name)
-        for raw in authorship.get("raw_affiliation_strings", []) or []:
-            if raw:
-                affiliations.add(raw)
-    article.affiliations = sorted(affiliations)
+    merged_affiliations = set(article.affiliations)
+    merged_affiliations.update(affiliations)
+    article.affiliations = sorted(merged_affiliations)
+
+    if not article.author_affiliations:
+        article.author_affiliations = author_affiliations
 
 
 def journal_index(journals: list[Journal]) -> tuple[set[str], set[str]]:
@@ -737,6 +762,11 @@ def write_csv_report(articles: list[Article], path: Path) -> None:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         for article in articles:
+            affiliation_value = (
+                format_author_affiliations(article.author_affiliations)
+                if article.author_affiliations
+                else csv_value(article.affiliations)
+            )
             writer.writerow(
                 {
                     "title": article.title,
@@ -747,7 +777,7 @@ def write_csv_report(articles: list[Article], path: Path) -> None:
                     "abstract": article.abstract,
                     "keywords": csv_value(article.keywords),
                     "authors": csv_value(article.authors),
-                    "affiliations": csv_value(article.affiliations),
+                    "affiliations": affiliation_value,
                     "matched_concepts": csv_value(article.matched_concepts),
                 }
             )
@@ -756,6 +786,11 @@ def write_csv_report(articles: list[Article], path: Path) -> None:
 def article_markdown(article: Article, index: int) -> str:
     abstract = article.abstract if article.abstract else "_No public abstract found._"
     abstract_status_icon = "Available" if article.abstract_status != "missing" else "Missing"
+    affiliation_value = (
+        format_author_affiliations(article.author_affiliations)
+        if article.author_affiliations
+        else csv_value(article.affiliations)
+    )
     return f"""### {index}. {article.title}
 
 | Field | Value |
@@ -764,7 +799,7 @@ def article_markdown(article: Article, index: int) -> str:
 | Publication date | {article.publication_date or "unknown"} |
 | DOI URL | {article.doi_url or "missing"} |
 | Authors | {csv_value(article.authors) or "not available"} |
-| Affiliations | {csv_value(article.affiliations) or "not available"} |
+| Affiliations | {affiliation_value or "not available"} |
 | Abstract status | {abstract_status_icon} |
 | Abstract | {abstract} |
 | Keywords | {csv_value(article.keywords) or "not available"} |
@@ -907,7 +942,7 @@ def parse_args() -> argparse.Namespace:
         default="openalex-keyword",
     )
     parser.add_argument("--per-keyword", type=int, default=200)
-    parser.add_argument("--max-pages", type=int, default=3)
+    parser.add_argument("--max-pages", type=int, default=10)
     parser.add_argument("--push-lark", action="store_true")
     parser.add_argument("--public-report-url", help="Public URL for the full hosted HTML report.")
     parser.add_argument("--public-index-url", help="Public URL for the hosted report index page.")

@@ -71,6 +71,8 @@ Run the previous full Tokyo-time week:
 python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --previous-week
 ```
 
+The default keyword-first scan checks up to 10 OpenAlex pages per concept to reduce missed whitelist matches caused by public metadata ranking changes.
+
 Run a specific Tokyo-time window:
 
 ```powershell

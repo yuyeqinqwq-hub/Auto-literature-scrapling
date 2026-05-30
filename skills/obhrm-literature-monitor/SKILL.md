@@ -52,6 +52,7 @@ python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --keywords "wor
 ```
 
 The default scan strategy is `openalex-keyword`: search OpenAlex by keyword/date first, filter to the approved OBHRM whitelist, then enrich by DOI through Crossref. Use `--strategy crossref-journal` only as a slower fallback when keyword-first discovery appears incomplete.
+Keep `--max-pages` high enough for weekly scans; the default is 10 pages per concept because OpenAlex relevance ordering can move whitelist articles beyond the first few pages.
 
 For weekly production-style scans, use the previous-week window:
 

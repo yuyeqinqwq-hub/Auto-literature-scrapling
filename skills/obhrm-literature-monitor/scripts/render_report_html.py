@@ -210,9 +210,35 @@ tr:last-child td { border-bottom: 0; }
   text-transform: uppercase;
 }
 .abstract-text {
-  max-width: 78ch;
   margin: 0;
   color: #263244;
+  hyphens: auto;
+  text-align: justify;
+  text-wrap: pretty;
+}
+.affiliation-table {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.affiliation-table th,
+.affiliation-table td {
+  padding: 10px 12px;
+}
+.affiliation-table th {
+  background: #f5f8fc;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.affiliation-author {
+  width: 24%;
+  color: #263244;
+  font-weight: 800;
+}
+.affiliation-value {
+  color: #263244;
+  text-align: left;
 }
 .badge {
   display: inline-block;
@@ -265,6 +291,22 @@ a:hover { text-decoration: underline; }
     padding: 8px 0;
   }
   .field-name { white-space: normal; }
+  .affiliation-table,
+  .affiliation-table thead,
+  .affiliation-table tbody,
+  .affiliation-table tr,
+  .affiliation-table th,
+  .affiliation-table td {
+    display: block;
+    width: 100%;
+  }
+  .affiliation-table th { display: none; }
+  .affiliation-author {
+    padding-bottom: 0;
+  }
+  .affiliation-value {
+    padding-top: 2px;
+  }
 }
 """
 
@@ -303,6 +345,30 @@ def inline_markdown(text: str) -> str:
     return escaped
 
 
+def render_author_affiliations(value: str) -> str:
+    rows = []
+    for raw_row in re.split(r"\s+(?:~~|\|\|)\s+", value):
+        if " :: " in raw_row:
+            author, affiliation = raw_row.split(" :: ", 1)
+        else:
+            author, affiliation = "not available", raw_row
+        rows.append(
+            "<tr>"
+            f'<td class="affiliation-author">{inline_markdown(author)}</td>'
+            f'<td class="affiliation-value">{inline_markdown(affiliation)}</td>'
+            "</tr>"
+        )
+    if not rows:
+        return inline_markdown(value)
+    return (
+        '<table class="affiliation-table">'
+        "<thead><tr><th>Author</th><th>Affiliation</th></tr></thead>"
+        "<tbody>"
+        + "\n".join(rows)
+        + "</tbody></table>"
+    )
+
+
 def parse_field_table(lines: list[str], start_index: int) -> tuple[list[tuple[str, str]], int]:
     fields: list[tuple[str, str]] = []
     index = start_index + 2
@@ -337,10 +403,12 @@ def render_fields(fields: list[tuple[str, str]]) -> str:
             chunks.append(
                 '<div class="abstract-block">'
                 f'<span class="abstract-label">{html.escape(name)}</span>'
-                f'<p class="abstract-text">{inline_markdown(value)}</p>'
+                f'<p class="abstract-text" lang="en">{inline_markdown(value)}</p>'
                 "</div>"
             )
             continue
+        elif name == "Affiliations" and " :: " in value:
+            value_html = render_author_affiliations(value)
         else:
             value_html = inline_markdown(value)
         rows.append(
