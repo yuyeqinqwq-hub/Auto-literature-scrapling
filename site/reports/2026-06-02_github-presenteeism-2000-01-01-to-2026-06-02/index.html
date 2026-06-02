@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OBHRM Weekly Literature Report</title>
+  <style>
+:root {
+  color-scheme: light;
+  --ink: #172033;
+  --muted: #647084;
+  --line: #d9e0ea;
+  --soft: #f7f9fc;
+  --panel: #ffffff;
+  --accent: #1f5fbf;
+  --accent-strong: #123b77;
+  --accent-soft: #eaf2ff;
+  --warn: #b42318;
+  --warn-soft: #fff1f0;
+  --ok: #067647;
+  --ok-soft: #ecfdf3;
+  --shadow: 0 18px 44px rgba(24, 33, 47, 0.10);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+    "Microsoft YaHei", Arial, sans-serif;
+  color: var(--ink);
+  background:
+    linear-gradient(180deg, #f4f7fb 0%, #eef3f8 260px, #f7f9fc 100%);
+  line-height: 1.55;
+}
+main {
+  width: min(1120px, calc(100% - 40px));
+  margin: 34px auto 56px;
+}
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 30px 34px;
+  box-shadow: var(--shadow);
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: linear-gradient(180deg, var(--accent), #6a9af6);
+}
+h1 {
+  margin: 0 0 18px;
+  color: var(--accent-strong);
+  font-size: 34px;
+  line-height: 1.16;
+  letter-spacing: 0;
+}
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+.meta-item {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.meta-label {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.section {
+  margin-top: 30px;
+}
+h2 {
+  margin: 0 0 16px;
+  color: var(--accent-strong);
+  font-size: 23px;
+  line-height: 1.25;
+}
+h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 19px;
+  line-height: 1.35;
+}
+.article {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0;
+  margin: 18px 0;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(24, 33, 47, 0.06);
+}
+.article-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--line);
+  background: #fbfcfe;
+}
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.article-content {
+  padding: 18px 24px 22px;
+}
+.note {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 12px 14px;
+  margin: 12px 0;
+  border-radius: 6px;
+  color: #243b63;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 14px rgba(24, 33, 47, 0.04);
+}
+.stat-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.stat-value {
+  display: block;
+  margin-top: 4px;
+  color: var(--accent-strong);
+  font-size: 26px;
+  font-weight: 800;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel);
+}
+th, td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 0;
+  vertical-align: top;
+}
+th {
+  background: #f1f4f9;
+  color: #344054;
+  text-align: left;
+}
+tr:last-child td { border-bottom: 0; }
+.field-name {
+  width: 170px;
+  color: var(--muted);
+  font-weight: 700;
+  white-space: nowrap;
+  padding-right: 18px;
+}
+.field-value {
+  color: #263244;
+}
+.abstract-block {
+  margin: 12px 0;
+  padding: 14px 16px;
+  background: #fbfdff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.abstract-label {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+.abstract-text {
+  margin: 0;
+  color: #263244;
+  hyphens: auto;
+  text-align: justify;
+  text-wrap: pretty;
+}
+.affiliation-table {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.affiliation-table th,
+.affiliation-table td {
+  padding: 10px 12px;
+}
+.affiliation-table th {
+  background: #f5f8fc;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.affiliation-author {
+  width: 24%;
+  color: #263244;
+  font-weight: 800;
+}
+.affiliation-value {
+  color: #263244;
+  text-align: left;
+}
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.badge.available { color: var(--ok); background: var(--ok-soft); }
+.badge.missing { color: var(--warn); background: var(--warn-soft); }
+.badge.journal {
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+}
+.badge.date {
+  color: #475467;
+  background: #f2f4f7;
+}
+.doi-link {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #b7cdfb;
+  border-radius: 999px;
+  background: #f7faff;
+  padding: 5px 10px;
+  font-weight: 700;
+}
+a {
+  color: var(--accent);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+a:hover { text-decoration: underline; }
+@media (max-width: 720px) {
+  main { width: min(100% - 20px, 1120px); margin-top: 16px; }
+  .hero { padding: 22px 20px; }
+  h1 { font-size: 26px; }
+  .article-header {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+  .article-meta {
+    justify-content: flex-start;
+  }
+  .article-content { padding: 16px 18px 18px; }
+  tr, td { display: block; width: 100%; }
+  td { border-bottom: 0; padding: 4px 0; }
+  tr {
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0;
+  }
+  .field-name { white-space: normal; }
+  .affiliation-table,
+  .affiliation-table thead,
+  .affiliation-table tbody,
+  .affiliation-table tr,
+  .affiliation-table th,
+  .affiliation-table td {
+    display: block;
+    width: 100%;
+  }
+  .affiliation-table th { display: none; }
+  .affiliation-author {
+    padding-bottom: 0;
+  }
+  .affiliation-value {
+    padding-top: 2px;
+  }
+}
+</style>
+</head>
+<body>
+  <main>
+<section class="hero">
+<h1>OBHRM Weekly Literature Report</h1>
+<div class="meta-grid"><div class="meta-item"><span class="meta-label">Window</span><strong>2000-01-01T00:00:00+09:00 to 2026-06-02T00:00:00+09:00</strong></div>
+<div class="meta-item"><span class="meta-label">Concepts</span><strong>Presenteeism; LLM; Large Language Model</strong></div>
+<div class="meta-item"><span class="meta-label">Target journal/platform whitelist size</span><strong>30</strong></div>
+<div class="meta-item"><span class="meta-label">Matched articles</span><strong>35</strong></div>
+<div class="meta-item"><span class="meta-label">Missing abstracts</span><strong>4</strong></div></div>
+</section>
+<section class="section"><h2>At a Glance</h2>
+<div class="stats-grid">
+<div class="stat-card"><span class="stat-label">Matched articles</span><span class="stat-value">35</span></div>
+<div class="stat-card"><span class="stat-label">Articles with abstracts</span><span class="stat-value">31</span></div>
+<div class="stat-card"><span class="stat-label">Missing abstracts</span><span class="stat-value">4</span></div>
+<div class="stat-card"><span class="stat-label">Target sources</span><span class="stat-value">30</span></div>
+</div>
+<p class="note">Publication metadata often has date-level rather than hour-level precision. This report uses the requested Tokyo-time window and public metadata API date filters.</p>
+<p class="note">Full-text boundary: this report provides DOI and publisher links only. Readers must manually use their own authorized university account for full-text access. The monitor does not log in, bypass access controls, or download PDFs.</p>
+<section class="section"><h2>Articles With Abstracts</h2>
+<article class="article">
+<div class="article-header">
+<h3>1. Sickness Presenteeism, Sickness Absenteeism, and Health Following Restructuring in a Public Service Organization</h3>
+<div class="article-meta"><span class="badge journal">Journal of Management Studies</span>
+<span class="badge date">2007-02-08</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Management Studies</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2007-02-08</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/j.1467-6486.2007.00690.x" target="_blank" rel="noopener">https://doi.org/10.1111/j.1467-6486.2007.00690.x</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Natasha Caverley</td><td class="affiliation-value">University of Victoria; University of Victoria, Canada</td></tr>
+<tr><td class="affiliation-author">John Cunningham</td><td class="affiliation-value">University of Victoria; University of Victoria, Canada</td></tr>
+<tr><td class="affiliation-author">James N. MacGregor</td><td class="affiliation-value">University of Victoria; University of Victoria, Canada</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">abstract This study examined the relationship between sickness presenteeism, sickness absenteeism, organizational outcomes and employee health. In particular, we wanted to investigate to what degree employees were substituting sickness presence for sickness absence. Three hypotheses were tested to formalize this ‘substitution proposition’. We surveyed a Canadian public service organization which was involved in a large scale downsizing initiative. For this study, 237 Personnel Corporation (pseudonym used) employees responded to the survey, representing a 66 per cent response rate. Survey results indicated that, while the workforce was of average health, sickness absenteeism was less than half that of the national average. The difference could be accounted for by sickness presenteeism – the average number of days employees attended work while ill or injured was greater than the number of days of sickness absence. The pattern of results supported the notion that employees were substituting presenteeism for absenteeism. The frequency and type of self‐reported health problems were highly similar for presenteeism and absenteeism. Work factors (e.g. job security, supervisor support and job satisfaction) tested were significantly correlated with presenteeism. Presenteeism appears to be a stronger predictor of health than absenteeism, suggesting that efforts to improve workplace health may have a more immediate impact on presenteeism than on absenteeism.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Health and Well-being; Employment and Welfare Studies; Occupational Health and Safety Research; Presenteeism; Absenteeism; Public health; Public sector; Restructuring; Medicine; Health care; Psychology; Nursing; Business; Social psychology; Political science; Economics; Economic growth; Finance; Law</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>2. Absence management and presenteeism: the pressures on employees to attend work and the impact of attendance on performance</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management Journal</span>
+<span class="badge date">2009-12-29</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management Journal</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2009-12-29</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/j.1748-8583.2009.00118.x" target="_blank" rel="noopener">https://doi.org/10.1111/j.1748-8583.2009.00118.x</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Denise Baker‐McClearn</td><td class="affiliation-value">University of Warwick; Health Sciences Research Institute, Warwick Medical School, University of Warwick</td></tr>
+<tr><td class="affiliation-author">Kay Greasley</td><td class="affiliation-value">University of Warwick; Health Sciences Research Institute, Warwick Medical School, University of Warwick</td></tr>
+<tr><td class="affiliation-author">Jeremy Dale</td><td class="affiliation-value">University of Warwick; Health Sciences Research Institute, Warwick Medical School, University of Warwick</td></tr>
+<tr><td class="affiliation-author">Frances J. Griffith</td><td class="affiliation-value">University of Warwick; Health Sciences Research Institute, Warwick Medical School, University of Warwick</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Absenteeism is an issue that has grown in importance over the past few years; however, little has been done to explore the impact of presenteeism on individual and organisational performance and well‐being. This article is based on interviews collected in nine case study organisations in the UK. Two sector organisations (one private and one public) were studied to examine absence management and a conceptual model of presenteeism, with further illustration provided using data from the other seven case studies. This enabled a pattern of presenteeism to emerge, along with the contextual and individual factors which impact on it. In addition to previous research, we found that presenteeism is a complex ‘problem’ and that it is not a single one‐dimensional construct, but is continually being shaped by individual and organisational factors. In addition, we found that performance and well‐being are more closely related to the organisational reaction to presenteeism and absenteeism, rather than the act itself.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Health and Well-being; Employment and Welfare Studies; Retirement, Disability, and Employment; Presenteeism; Absenteeism; Attendance; Construct (python library); Psychology; Work (physics); Business; Public sector; Public relations; Applied psychology; Social psychology; Political science; Economics; Computer science; Engineering; Economic growth; Programming language; Law; Mechanical engineering</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>3. It is worse when you do it: Examining the interactive effects of coworker presenteeism and demographic similarity.</h3>
+<div class="article-meta"><span class="badge journal">Journal of Applied Psychology</span>
+<span class="badge date">2015-01-01</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Applied Psychology</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2015-01-01</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1037/a0038755" target="_blank" rel="noopener">https://doi.org/10.1037/a0038755</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Aleksandra Luksyte</td><td class="affiliation-value">University of Western Australia; UWA Business School</td></tr>
+<tr><td class="affiliation-author">Derek R. Avery</td><td class="affiliation-value">Temple University; Temple College; Temple University, Department of Human Resource Management, PA, US</td></tr>
+<tr><td class="affiliation-author">Gillian Yeo</td><td class="affiliation-value">University of Western Australia; UWA Business School</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Presenteeism (showing up for work while sick) is detrimental for employee productivity, yet little is known about its impact on coworkers. Presenteeism may be particularly important when considering coworker reactions that may depend on how similar the sick person is to the coworker. The black sheep hypothesis suggests that the detrimental effects of coworker presenteeism on emotional and behavioral reactions will be exacerbated when there is greater demographic similarity to the perpetrator because the violation of norms of reciprocity, empathy, and concern for others&#x27; well-being reflects negatively on one&#x27;s in-group. We tested the black sheep hypothesis in 2 samples: (a) 81 short-term teams (N = 254) where we manipulated presenteeism using confederates who acted as either sick or healthy coworkers and (b) 34 student project teams (N = 104) that collaborated for 3 months and we measured coworker presenteeism. Across the studies, mediated moderation results yielded some support for the black sheep hypothesis. When they were of the same race or sex, coworker presenteeism led participants to feel less positively and exhibit lower physical engagement and more organizational deviance (Study 1). When coworkers were more racially similar to the participant, coworker presenteeism triggered fear of contagion and negative affect resulting in more organizational and interpersonal deviance (Study 2).</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Job Satisfaction and Organizational Behavior; Healthcare professionals’ stress and burnout; Presenteeism; Psychology; Social psychology; Moderation; Interpersonal communication; Affect (linguistics); Absenteeism; Communication</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>4. ‘We&#x27;re Sorry to Hear You&#x27;ve Been Unwell…’ Personal Reflections on Health and Well‐being in the Workplace</h3>
+<div class="article-meta"><span class="badge journal">Journal of Management Studies</span>
+<span class="badge date">2016-02-15</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Management Studies</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2016-02-15</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/joms.12186" target="_blank" rel="noopener">https://doi.org/10.1111/joms.12186</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Andrea Prothero</td><td class="affiliation-value">University College Dublin</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">At 6pm on 16 December 2014 while sat at my kitchen table and slowly marking 500+ exams I received a call from my cardiologist. As expected, the various tests I had completed all proved to be normal. However, a cardiac CT scan had surprisingly identified a rare and life-threatening anomaly. It seemed I suffered from a condition which occurs in less than one per cent of the population and could (though might not) lead to me becoming a victim of sudden cardiac death. Open heart surgery beckoned five weeks later. I was not seriously ill before my surgery; tests were sparked by a single fainting episode and a low heart rate detected via an App. Neither the cardiologist nor my 47 year-old self expected such an outcome. Open-heart surgery is serious business, recovery takes about six months to be on the right side of ‘normal’ and another six before you are ‘fully’ recovered. Thankfully, long-term prognosis is excellent and I have recently been discharged from the cardiologists’ care. What then was my experience of returning to work after a lengthy absence? Here, I provide an intimate introspective account and hope it provides food for thought for future managerial research in the health and well-being arena. It should be noted that an income protection policy meant I did not have to worry about money during my absence from work, a privilege that is not afforded to many others with long term illness. First, before a discussion of returning to work it&#x27;s important to highlight what my relationship with work was like before my illness. A snapshot of the five week period before open heart surgery offers a clear indication of how work has always received top priority in my life. After the cardiologist phoned with the news of surgery, I made my kids their tea and then went back to grading exams. I finished grading and all the other horrible messy jobs involved with the exams process and let co-authors, students and other colleagues know of my impending absence. It embarrasses me to admit that one of the first things I thought about when I realised surgery was imminent was to rue the fact that my first research-only semester after five years of significant managerial positions would now no longer happen. The morning I left for hospital my husband literally dragged me away from the computer as I hit send on a reference for a part-time PhD student. One of my last acts before surgery was to see that my email out of office was working properly. I wish this was a joke, but sadly it isn&#x27;t. Would anyone have complained if I had said I was not emotionally capable of marking 500+ exams? This was a question I actually did not consider. It simply never occurred to me not to grade and if it had I&#x27;m sure I would not have passed on such a significant work-load to colleagues during the busy exam marking season. Why on earth did I not spend every waking hour with my family instead? It was certainly not good for my well-being to work incredibly long hours before life-saving surgery, but I never considered other options. Why did I have such a strong work-ethic, would others in my position have had a similar response and what are the implications of this for our understanding of health and well-being in the work-place? What happens when a workaholic can no longer be or no longer wants to be a workaholic and what impact does presenteeism have on employees’ health? Three months into my recuperation, I received a detailed letter from HR which opened with ‘we&#x27;re sorry to hear you&#x27;ve been unwell’. The body of the letter made no reference to my illness, but rather, included copious information on requirements and details about financial (dis)entitlements and how to claim them. It was overwhelming, confusing and sent me into a state of panic (not good for someone who has recently received open heart surgery). Eventually, I asked my husband to ‘bin it’ on the assumption that at some point HR would write again and I would be better able to cope with the form filling, which of course was the case. The next step in coming back to work was just shy of six months post-surgery and involved visiting a university appointed GP who was to determine my fitness to return. Reassurances from my own care providers were not acceptable, even though the appointed GP asked if my cardiologist was happy to approve my return. After a brief five minute chat, I was declared fit enough to go back to my job. It became clear that the appointed GP&#x27;s role was to ensure that the university was following necessary procedures, but they were not interested in my health or well-being beyond this. The HR process meant that my HR function went through a set of procedures to ensure I was fit for work – ironically these procedures were woefully inadequate. While I told the university appointed GP I felt able to resume my job, this was far from the truth. In reality I did not feel either physically or mentally ready to return, but felt a huge obligation to do so. All of the other patients on my cardiac rehab programme had gone back to their jobs, my cardiologist had said I was physically able to return, and I felt somewhat of a fraud and also a failure by saying ‘you know what guys, I can&#x27;t do this yet’. In hindsight it seems obvious that I returned to work too early, the HR protocols didn&#x27;t pick up on this, and I struggled on as a consequence. My communication with HR was one that I felt dealt with my illness in the abstract. The HR bureaucracy did not allow members of HR to be interested in the vicissitudes of my life. The HR department was an impersonal bureaucratic machine that was indifferent to me as a person, not because the people in HR didn&#x27;t care, but because the process did not allow for anything else. From many conversations I have had, it seems my university is far from alone in its approach. Six months after surgery I returned to academia. Having only been absent from work for no longer than a few weeks during my 25 year career and foolishly working throughout my maternity leaves this was my longest period of not working. The journey was an incredibly challenging one. My first day back was in August, I was pleased about this – there would be no students and many colleagues would be on annual leave, thus enabling me to quietly ‘settle’ back in. My vulnerability was exposed before even the opportunity to enter the building arose – I was physically unable to open the very heavy doors and needed to press the disabled button to gain entrance. The impact of this on my emotional well-being was profound. If I couldn&#x27;t even open the door how on earth would I be able to teach or carry out my research activities? Physical and emotional vulnerabilities were, and still are, a central facet of my well-being. Physical symptoms following open heart surgery include poor concentration, cognition and short-term memory issues – not exactly ideal for an academic. Fatigue is a significant factor also. My first forays entailed real struggles with the mundane – forgetting my username and password allowing access to email and online storage applications such as Dropbox; forgetting the keycodes to the staff common room etc. I even forgot which junction to take exiting the motorway. I was beyond exhausted after finding solutions to simple humdrum problems and had yet to actually do any ‘real’ work. While HR processes existed to ensure I was fit to return to work there were no protocols in place to follow up on how I was getting on – in the 16 weeks since my return no-one from the HR function has been in contact to ask after me, my health or well-being. Even if the protocols had been more effective, I&#x27;m not sure they would&#x27;ve allowed me to capture the profound impact not being able to open the door had on me; or how, when entering my office for the first time in many months, I became distraught because the previous view of the car park now housed a partially completed five storey student residence. Tempus fugit hit me like a freight train. I felt as if I were in a bad episode of a reality TV show, left the building to digest the new residences and promptly burst into tears after realising that leaving the building meant that I now had to press the disabled entrance button twice in one day. I wonder how would one capture this experience and emotion in a return to work questionnaire? Somehow ‘on a scale of one to ten how difficult did you find the return to work’ doesn&#x27;t quite capture it. The university process was insufficent for preparing me for the moment I stood at the door and felt hopeless and overwhelmed, but could any process have been more effective? How do organisations measure trauma when individuals will not know how they will cope with something until it happens? The solitary life of an academic meant I felt completely out of my depth, thrown in at the deep end, and genuinely terrified. The first five colleagues I met were unaware that I had been absent or seriously ill. Since my return, I would guess that approximately half of my colleagues, in a Business School I have worked for nearly 16 years, did not know I had undergone open heart surgery. To say I felt like a very unimportant cog in a very large machine would be somewhat of an understatement. I have asked many friends and co-workers for their take on this lack of knowledge about a serious life-event for one of their colleagues; the response has been mixed. Colleagues have recounted how they had not wanted to talk about my illness to others because it was not their story to share. Friends reminded me that academics are not the most attentive and aware individuals and others pressed home how they deliberately ‘hid’ my illness to protect me from any unneccesary work intrusions while I recuperated. In reality, a combination of these reasons, and probably others too, helps explain a lack of knowledge regarding my personal circumstances. And, of course I now wonder if the shoe had been on the other foot would I have been one of those self-obsessed academics unaware of my colleagues’ health? Why have our private lives become invisible in the workplace? Will it be a case of ‘everyone alone at work’, as discussed in Courpasson&#x27;s (2016) recent essay in this series? At this juncture I must draw attention to the compassion of some work colleagues. My Dean and Head of Subject Area were incredibly supportive before, during and after surgery. I had considered taking a year&#x27;s leave of absence and reducing some of my responsibilities following my immediate return was life-changing. A small number of colleagues were a life-line during my recuperation and return to work – from visits to the hospital and my home, social lunches, and for their humour; I could not have survived without their compassion. They played a crucial role along with other friends and family in my recovery. A number of other colleagues sent flowers, cards, texts and messages to get well soon – all of which really mattered, in a way I would not have expected prior to my illness. In fact, many collaborators from around the world were wonderfully supportive. These acts of compassion were informal and voluntary, my colleagues were simply being kind, caring, human beings. Without the human interaction that keeps the organisation going on so many levels, work would have been intolerable. It is the daily experiences of individuals in the work-place which should populate our theories and papers. Without these human interactions will organisations become soulless, taking on an Orwellian façade whereby employees are doomed to a life as one of Philip Larkin&#x27;s Toads? Human beings are, of course, incredibly complicated – this is what makes us human – and while I found colleagues’ lack of knowledge about my health to be deeply upsetting, others could want extreme privacy about their personal life within the workplace. One contributory factor to both a lack of knowledge and support on my return to work is our ‘time poor’ culture. So many colleagues have mentioned that we should ‘do lunch’ or ‘catch up properly’ when they can ‘find the time’. Being time poor has become a badge of honour in organisations, indeed in life in general. Prior to my illness, I worked an average 58 hour week, and rarely had a weekend when I did not answer emails – I believe I was successful in a senior managerial role as Associate Dean for Academic Affairs, but my family and personal life certainly suffered. I am no longer working ridiculously long hours, partly as this would be a physical impossibility and to some extent because, not surprisingly, I&#x27;ve re-evaluated my relationship with work. What strikes me is that, while this re-evaluation will most definitely be good for my happiness, health and well-being, it won&#x27;t necessarily be good for my ‘economic’ productivity, at least in the short-term. Of course, it could contribute to not suffering in the longer term from the ‘burn-out’ so many do in the contemporary workplace. I&#x27;ve always had an ambivalent relationship with KPIs in education and struggle to understand their purported benefits and this has not changed. I still question the merits of the Association of Business School (ABS) journal rankings and the Research Excellence Framework (REF) (even though I haven&#x27;t worked in the British system for 16 years). I still question why performative measures are economic ones, even in not-for-profit organisations such as universities. But, now I also question not only the academic merits of these measurements, but the health and well-being implications too. Not conforming to the “new norm” of only publishing 4* and/or FT45 papers (I&#x27;m still perplexed as to how universities have allowed a newspaper to determine what our research output should be) or whatever the latest fad is, has certainly impacted my promotion chances. Prior to my surgery, while I made some small unsuccessful attempts at both micro and macro levels to change this, I reluctantly accepted the status quo. Today, I have no intention of changing either what I write about or where I publish and, when I feel able, I will attempt to shout louder about the arbitrary system, but will also be asking my organisation and the university sector to consider what impact the constant need to perform at exceptionally high levels has on health and well-being. What measures will be put in place to protect colleagues, particularly those embarking on an academic career? And will these measures be effective? What then of my future? My work-life balance will, I hope, be changed forever. I am aiming for a balance which works for both my mental and physical health, my personal life and my workplace. It saddens me that it has taken open-heart surgery to realise that my work-life balance was definitely tipped in favour of work. Ultimately this means in terms of university metrics my ‘productivity’ will decrease. Does this bother me? Yes, absolutely. But not enough to work inordinate hours again. I recently listened to a colleague describe how women were not being honoured for their business achievements because they were not (yet) as successful as men. I was apoplectic at this false statement, but while I simply put my hands to my face in horror, another colleague made a reflective comment – perhaps we need to re-define success? In terms of managerial research, the broad questions which need addressing are fundamental ones. Why does so much of the research on health and well-being in organisations focus on the bottom-line? Why, in so much management research, is the underlying assumption if it&#x27;s not good for business we shouldn&#x27;t do it? Even in the staggering example of VW&#x27;s diesel emissions scandal, the initial storylines predominately focused on how much will be wiped off VW&#x27;s share price rather than how much damage the engine rigging has done to the planet or our health. As Pfeffer (2016) suggests in his essay in this series, does the bottom line always win out? Can research help organisations to transform the workplace to ensure health and well-being are important in their own right, rather than emphasize how they may contribute to the economic success of organisations? The human side of my organisation kept me during my the HR side kept me While the protocols and procedures were and the meant my illness was from colleagues, the informal to my return to health and my to perform my job. Can management research the of the human in organisations, and in the role of the human in health and well-being in the workplace? the years have focused on the of health and well-being in the workplace. However, a of academic since health and well-being research has become a it is this is from a view of the as and this is because there is a lack of research management of the academic research on work-life balance while the the of for both and the in to my own health and well-being it life-saving surgery and a months absence from work to me the to work. The of my job, by an of being always at work, and to and the badge of honour for being busy are difficult to research on colleagues return to work after a lengthy absence is as is significant research on the health implications of I the focus in future health and well-being research should be to the human to the Human well-being should take – this may or not the organisation more But it could lead to and human beings and better to work. It has now been months since I returned to work and this essay has allowed me to on I have to my in terms of not working ridiculously long hours real will, of course, when I am physically able to work long hours, but not I have said more in this than during my colleagues that to me still me I guess I&#x27;ve yet to do with those colleagues who said do and I still colleagues who ask me how my my concentration, cognition and short-term memory are and my is to feel like constant with I have not yet allowed my work email to be on my I still can&#x27;t open the door to the building without this me but I do which to I&#x27;ve that the of the workplace really me out and not to with one way to do this has been to social at work – this of course means I am in of being at I it&#x27;s I up every day and about my and while I am not at work I am to it and am that my new relationship with it will be a one. I to the colleagues who in my recovery. And, while this essay details my struggles with the workplace I am very happy to be</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Health and Well-being; Employment and Welfare Studies; Healthcare professionals’ stress and burnout; Psychology; Social psychology; Business; Public relations; Sociology; Political science</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>5. The health-performance framework of presenteeism: Towards understanding an adaptive behaviour</h3>
+<div class="article-meta"><span class="badge journal">Human Relations</span>
+<span class="badge date">2019-03-18</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Relations</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2019-03-18</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1177/0018726719827081" target="_blank" rel="noopener">https://doi.org/10.1177/0018726719827081</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Maria Karanika‐Murray</td><td class="affiliation-value">Nottingham Trent University; Nottingham Trent University, UK,</td></tr>
+<tr><td class="affiliation-author">Caroline Biron</td><td class="affiliation-value">Université Laval; Laval University, Canada,</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">The substantial health and financial costs of presenteeism are well-documented. Paradoxically, presenteeism also has a positive side, which has been largely overlooked. Emerging evidence shows that presenteeism can be a choice that offers a range of positive benefits to the ‘presentee’ (an employee who works through illness). In this conceptual article, we view presenteeism as purposeful and adaptive behaviour: a dynamic process that serves the purpose of balancing health constraints and performance demands in tandem. We propose a 2×2 framework of presenteeism (therapeutic, functional, overachieving, and dysfunctional) and suggest that the success of the presenteeism adaptation process depends on the availability of internal capacities and flexible work resources. When the workplace is supportive and provides adequate resources to aid adaptation, presenteeism can be a sustainable choice for maintaining performance under impaired health. We examine the role of resources for functional presenteeism by drawing on conservation of resources theory and self-determination theory. This framework can contribute to a better understanding of presenteeism by viewing it as an adaptive process, considering presentees as heterogeneous groups, and exploring the importance of internal and work resources for balancing health and performance demands. It sketches new avenues for research and practice and the effective management of presenteeism, health, and performance.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Health and Well-being; Employment and Welfare Studies; Health Systems, Economic Evaluations, Quality of Life; Presenteeism; Dysfunctional family; Psychology; Conceptual framework; Knowledge management; Process (computing); Business; Process management; Applied psychology; Social psychology; Computer science; Clinical psychology; Absenteeism; Sociology; Social science; Operating system</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>6. Recessionary actions and absence: A workplace‐level study</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management</span>
+<span class="badge date">2020-03-12</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2020-03-12</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1002/hrm.22008" target="_blank" rel="noopener">https://doi.org/10.1002/hrm.22008</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Stephen Wood</td><td class="affiliation-value">University of Leicester; University of Leicester School of Business Leicester UK</td></tr>
+<tr><td class="affiliation-author">George Michaelides</td><td class="affiliation-value">University of East Anglia; Norwich Business School University of East Anglia Norwich UK</td></tr>
+<tr><td class="affiliation-author">Chidiebere Ogbonnaya</td><td class="affiliation-value">University of Sussex; Department of Management University of Sussex Brighton UK</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract Actions such as work restructuring and wage and employment freezes taken by organizations in response to recessions are widely assumed to decrease employees&#x27; job security and detrimentally affect perceptions of management&#x27;s trustworthiness. We assess whether these effects occur and if, in turn, they affect workplace absenteeism. Using data from Britain&#x27;s Workplace Employee Relations Survey 2011, we show that the effects on stress‐based absence are limited and not as predicted, but the effects on withdrawal‐based absence are strong and as predicted. Reductions in well‐being or job security&#x27;s effect on well‐being did not affect absence, and while the reduction of trust perceptions&#x27; effect was to increase anxiety, anxiety did not increase but reduced absenteeism. The effects on withdrawal absence differ: those of recessionary action through job security reduce absenteeism, while those through trust perceptions increase it, both as predicted. The two effects involving trust perceptions are less pronounced when recessionary actions are accompanied by voluntary layoffs, but not by compulsory layoffs. The implications for management are that they should be more conscious of the effects on absence when planning recessionary actions, and more generally their effects on presenteeism.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Employment and Welfare Studies; Retirement, Disability, and Employment; Workplace Health and Well-being; Absenteeism; Affect (linguistics); Job security; Restructuring; Perception; Anxiety; Presenteeism; Recession; Turnover; Psychology; Demographic economics; Business; Labour economics; Work (physics); Social psychology; Economics; Finance; Management; Mechanical engineering; Neuroscience; Communication; Engineering; Psychiatry; Keynesian economics</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>7. Are you sick? Understanding the effects of coworker presenteeism on workplace mistreatment.</h3>
+<div class="article-meta"><span class="badge journal">Journal of Applied Psychology</span>
+<span class="badge date">2021-09-01</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Applied Psychology</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2021-09-01</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1037/apl0000966" target="_blank" rel="noopener">https://doi.org/10.1037/apl0000966</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Shannon G. Taylor</td><td class="affiliation-value">University of Central Florida; Department of Management, College of Business Administration, University of Central Florida</td></tr>
+<tr><td class="affiliation-author">Marcus M. Butts</td><td class="affiliation-value">Southern Methodist University; Department of Management and Organizations, Cox School of Business, Southern Methodist University</td></tr>
+<tr><td class="affiliation-author">Michael S. Cole</td><td class="affiliation-value">Texas Christian University; Department of Management and Leadership, Neeley School of Business, Texas Christian University</td></tr>
+<tr><td class="affiliation-author">Troy Wesley Pounds</td><td class="affiliation-value">University of Central Florida; College of Business Administration; Department of Integrated Business, College of Business Administration, University of Central Florida</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">As organizations across the United States resume activities even as the novel coronavirus endures, millions of employees could come into contact with sick coworkers and become exposed to the 2019 novel coronavirus (COVID-19). Unfortunately, little is known about how sick individuals might be treated at work. Because working with a sick coworker may simultaneously evoke concerns about oneself and one&#x27;s ailing colleague, we propose dual mechanisms of self-concern and coworker-orientation to explain the relationship between coworker presenteeism (i.e., a coworker attends work while ill) and interpersonal mistreatment. Across two studies with employees working face-to-face during the pandemic, our findings showed that coworker presenteeism decreases subsequent workplace mistreatment through coworker-orientation. Moreover, we found that coworker presenteeism increases mistreatment through self-concern when employees experience higher workloads. Implications and future research directions are discussed. (PsycInfo Database Record (c) 2024 APA, all rights reserved).</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Employment and Welfare Studies; Workplace Health and Well-being; Job Satisfaction and Organizational Behavior; Presenteeism; Psychology; Sick leave; Social psychology; Absenteeism; Applied psychology; Labour economics; Economics</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>8. Developing the concept of leaveism: From presenteeism/absence to an emergent and expanding domain of employment?</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management Journal</span>
+<span class="badge date">2022-05-23</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management Journal</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2022-05-23</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/1748-8583.12452" target="_blank" rel="noopener">https://doi.org/10.1111/1748-8583.12452</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">James Richards</td><td class="affiliation-value">Heriot-Watt University; Edinburgh Business School Heriot‐Watt University Edinburgh UK; Edinburgh Business School, Heriot-Watt University, Edinburgh, UK</td></tr>
+<tr><td class="affiliation-author">Vaughan Ellis</td><td class="affiliation-value">Edinburgh Napier University; Edinburgh Napier University Edinburgh UK; Edinburgh Napier University, Edinburgh, UK</td></tr>
+<tr><td class="affiliation-author">Jesus Canduela</td><td class="affiliation-value">Heriot-Watt University; Edinburgh Business School Heriot‐Watt University Edinburgh UK; Edinburgh Business School, Heriot-Watt University, Edinburgh, UK</td></tr>
+<tr><td class="affiliation-author">Toma Pustelnikovaite</td><td class="affiliation-value">Abertay University; Abertay University Dundee UK; Abertay University, Dundee, UK</td></tr>
+<tr><td class="affiliation-author">Siddhartha Saxena</td><td class="affiliation-value">Ahmedabad University; Ahmedabad University Ahmedabad India; Ahmedabad University, Ahmedabad, India</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract The changing nature of employment has led to increased awareness of leaveism, a practice involving employees using allocated time off when unwell, taking work home, and picking up work when on annual leave. However, there are theoretical, methodological, and policy/practice‐related weaknesses, apparent in current understandings. The main article aim is to develop, theoretically, the emergent notion of leaveism, drawing on concepts related to work intensification (WI) and ideal worker norms (IWNs), concepts underpinned by reference to information communication technologies (ICTs), then exploring such ideas via an electronic questionnaire ( n = 959), aimed at UK‐based employees performing leaveism. The main argument is leaveism is more than a lacuna between presenteeism and sickness absence; it is an unsustainable employer‐driven social phenomenon sitting at the intersection of WI, IWNs and ICTs. The findings have policy/practice implications for human resource management (HRM) professionals, trade unions and governments. Recommendations for future research including exploring leaveism in an international context, and in a Covid‐19 pandemic‐defined era.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Employment and Welfare Studies; Work-Family Balance Challenges; Retirement, Disability, and Employment; Presenteeism; Argument (complex analysis); Context (archaeology); Public relations; Work (physics); Absenteeism; Human resource management; Sociology; Information and Communications Technology; Business; Political science; Psychology; Management; Economics; Social psychology; Engineering; Mechanical engineering; Biology; Chemistry; Biochemistry; Paleontology; Law</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>9. Change of productivity loss due to presenteeism among the ageing workforce: Role of work support, workplace discrimination, and the work‐nonwork interface</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management Journal</span>
+<span class="badge date">2022-10-20</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management Journal</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2022-10-20</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/1748-8583.12475" target="_blank" rel="noopener">https://doi.org/10.1111/1748-8583.12475</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Tianan Yang</td><td class="affiliation-value">Beijing Institute of Technology; School of Management and Economics Beijing Institute of Technology Beijing China; Sustainable Development Research Institute for Economy and Society of Beijing Beijing China; Sustainable Development Research Institute for Economy and Society of Beijing, Beijing, China; School of Management and Economics, Beijing Institute of Technology, Beijing, China</td></tr>
+<tr><td class="affiliation-author">Yexin Liu</td><td class="affiliation-value">Beijing Institute of Technology; School of Management and Economics Beijing Institute of Technology Beijing China; Sustainable Development Research Institute for Economy and Society of Beijing Beijing China; School of Management and Economics, Beijing Institute of Technology, Beijing, China; Sustainable Development Research Institute for Economy and Society of Beijing, Beijing, China</td></tr>
+<tr><td class="affiliation-author">Zhenjiao Chen</td><td class="affiliation-value">University of International Business and Economics; International Business School University of International Business and Economics Beijing China; International Business School, University of International Business and Economics, Beijing, China</td></tr>
+<tr><td class="affiliation-author">Jianwei Deng</td><td class="affiliation-value">Beijing Institute of Technology; School of Management and Economics Beijing Institute of Technology Beijing China; Sustainable Development Research Institute for Economy and Society of Beijing Beijing China; School of Management and Economics, Beijing Institute of Technology, Beijing, China; Sustainable Development Research Institute for Economy and Society of Beijing, Beijing, China</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract Presenteeism behaviour (working while one is ill or experiencing cognitive or emotional difficulties) and the consequent productivity loss are attracting growing attention. Without proper support, employees who are under stress or ill are prone to presenteeism, which incurs invisible burdens on organizations. In this study, we focussed on productivity loss due to presenteeism (PRE) among the ageing workforce, because this group may be more vulnerable to productivity loss due to age‐related deteriorating cognitive functions and physical abilities. We established a longitudinal latent difference score model over a two‐wave period so we could examine whether and how the work–nonwork interface mediates the effects of work support and workplace discrimination (DIS) on PRE. The results showed that the work–nonwork interface fully mediated the positive influence of DIS on PRE as well as the negative influence of supervisor support.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Health and Well-being; Employment and Welfare Studies; Job Satisfaction and Organizational Behavior; Presenteeism; Workforce; Productivity; Psychology; Work (physics); Cognition; Supervisor; Demographic economics; Gerontology; Applied psychology; Business; Social psychology; Absenteeism; Medicine; Economics; Engineering; Economic growth; Management; Mechanical engineering; Neuroscience</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>10. The Bullwhip Effect in Servitized Manufacturers</h3>
+<div class="article-meta"><span class="badge journal">Management Science</span>
+<span class="badge date">2024-04-25</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Management Science</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2024-04-25</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1287/mnsc.2023.01026" target="_blank" rel="noopener">https://doi.org/10.1287/mnsc.2023.01026</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Yimeng Niu</td><td class="affiliation-value">Shanghai Jiao Tong University; Antai College of Economics and Management, Shanghai Jiao Tong University, Shanghai 200240, China;</td></tr>
+<tr><td class="affiliation-author">Jing Wu</td><td class="affiliation-value">Chinese University of Hong Kong; CUHK Business School, The Chinese University of Hong Kong, Hong Kong;</td></tr>
+<tr><td class="affiliation-author">Shenyang Jiang</td><td class="affiliation-value">Tongji University; Hong Kong Polytechnic University; Advanced Institute of Business, Tongji University, Shanghai 200070, China;; Department of Logistics and Maritime Studies, The Hong Kong Polytechnic University, Hong Kong, China</td></tr>
+<tr><td class="affiliation-author">Zhibin Jiang</td><td class="affiliation-value">Shanghai Jiao Tong University; Antai College of Economics and Management, Shanghai Jiao Tong University, Shanghai 200240, China;</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">The shift to a service-oriented economy has driven traditional product-oriented manufacturing firms to integrate various services into their businesses. This study aims to provide empirical evidence on how manufacturers’ service offerings impact demand variability and intrafirm bullwhip effects. Through “bag-of-words” text mining on 10-K filings of U.S.-listed manufacturing firms, we propose a novel measurement to identify annual services offered. We validate the measurement’s statistical and economic significance and verify its consistency with the results obtained using the large language model (i.e., GPT-4). Services are categorized as complementing product sales (e.g., maintenance and repair) or substituting product sales entirely (e.g., machine hours). Utilizing difference-in-difference techniques, we find robust evidence that manufacturers’ service offerings reduce the bullwhip effect in two steps: basic complementing services decrease demand variability, whereas advanced substituting services mitigate intrafirm bullwhip. Moreover, servitization mainly minimizes demand variability through information channels, whereas increased production efficiency decreases intrafirm bullwhip. Our findings contribute to understanding manufacturers’ business model innovations by demonstrating that servitization can smooth demand and mitigate intrafirm bullwhip. This paper was accepted by Karan Girotra, operations management. Funding: This work was supported by the National Natural Science Foundation of China [Grants 71931007, 72091214] and General Research Fund by Hong Kong Research Grants Council [Grant 14505320]. Supplemental Material: The data and the online appendix are available at <a class="doi-link" href="https://doi.org/10.1287/mnsc.2023.01026" target="_blank" rel="noopener">https://doi.org/10.1287/mnsc.2023.01026</a> .</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Supply Chain and Inventory Management; Consumer Market Behavior and Pricing; Sustainable Supply Chain Management; Bullwhip effect; Business; Marketing; Economics; Industrial organization; Econometrics; Supply chain management; Supply chain</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>11. The Crowdless Future? Generative AI and Creative Problem-Solving</h3>
+<div class="article-meta"><span class="badge journal">Organization Science</span>
+<span class="badge date">2024-08-13</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Organization Science</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2024-08-13</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1287/orsc.2023.18430" target="_blank" rel="noopener">https://doi.org/10.1287/orsc.2023.18430</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Léonard Boussioux</td><td class="affiliation-value">University of Washington; Michael G. Foster School of Business, University of Washington, Seattle, Washington 98195;</td></tr>
+<tr><td class="affiliation-author">Jacqueline N. Lane</td><td class="affiliation-value">Harvard Business School, Boston, Massachusetts 02163;</td></tr>
+<tr><td class="affiliation-author">Miaomiao Zhang</td><td class="affiliation-value">ContinuumLab.AI, San Francisco, California 94114</td></tr>
+<tr><td class="affiliation-author">Vladimir Jaćimović</td><td class="affiliation-value">ContinuumLab.AI, San Francisco, California 94114; Harvard Business School, Boston, Massachusetts 02163;</td></tr>
+<tr><td class="affiliation-author">Karim R. Lakhani</td><td class="affiliation-value">Harvard Business School, Boston, Massachusetts 02163;</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">The rapid advances in generative artificial intelligence (AI) open up attractive opportunities for creative problem-solving through human-guided AI partnerships. To explore this potential, we initiated a crowdsourcing challenge focused on sustainable, circular economy business ideas generated by the human crowd (HC) and collaborative human-AI efforts using two alternative forms of solution search. The challenge attracted 125 global solvers from various industries, and we used strategic prompt engineering to generate the human-AI solutions. We recruited 300 external human evaluators to judge a randomized selection of 13 out of 234 solutions, totaling 3,900 evaluator-solution pairs. Our results indicate that while human crowd solutions exhibited higher novelty—both on average and for highly novel outcomes—human-AI solutions demonstrated superior strategic viability, financial and environmental value, and overall quality. Notably, human-AI solutions cocreated through differentiated search, where human-guided prompts instructed the large language model to sequentially generate outputs distinct from previous iterations, outperformed solutions generated through independent search. By incorporating “AI in the loop” into human-centered creative problem-solving, our study demonstrates a scalable, cost-effective approach to augment the early innovation phases and lays the groundwork for investigating how integrating human-AI solution search processes can drive more impactful innovations. Funding: This work was supported by Harvard Business School (Division of Research and Faculty Development) and the Laboratory for Innovation Science at Harvard (LISH) at the Digital Data and Design (D 3 ) Institute at Harvard. Supplemental Material: The online appendix is available at <a class="doi-link" href="https://doi.org/10.1287/orsc.2023.18430" target="_blank" rel="noopener">https://doi.org/10.1287/orsc.2023.18430</a> .</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Open Source Software Innovations; Mobile Crowdsensing and Crowdsourcing; Private Equity and Venture Capital; Crowdsourcing; Creativity; Generative grammar; Computer science; Human intelligence; Novelty; Artificial intelligence; Creative problem-solving; Quality (philosophy); Knowledge management; Management science; Economics; Psychology; World Wide Web; Epistemology; Philosophy; Social psychology</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>12. The hazards of performance management: An investigation into its effects on employee absenteeism and presenteeism</h3>
+<div class="article-meta"><span class="badge journal">Human Relations</span>
+<span class="badge date">2024-09-14</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Relations</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2024-09-14</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1177/00187267241274619" target="_blank" rel="noopener">https://doi.org/10.1177/00187267241274619</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Mariella Miraglia</td><td class="affiliation-value">University of Liverpool; University of Liverpool, UK,</td></tr>
+<tr><td class="affiliation-author">Silvia Dello Russo</td><td class="affiliation-value">Libera Università Internazionale degli Studi Sociali Guido Carli; LUISS University, Italy,</td></tr>
+<tr><td class="affiliation-author">Grégor Bouville</td><td class="affiliation-value">Institut Régional d’Administration de Lille; Université Jean Moulin Lyon III; Université Jean Moulin Lyon 3, France,; Institut d&#x27;Administration des Entreprises (IAE) - Lyon (France)</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Performance management (PM) practices were conceived to improve employees’ performance. However, one may ask: do they also have unintended and accompanying consequences on employee well-being? In this study, we set out to answer this question, and examined the influence of three PM practices, namely goal setting, monitoring, and performance evaluation, on two behavioral indicators of employee well-being: sickness absenteeism (not working owing to illness) and presenteeism (working despite illness). Our assumption, based on labor process theory, is that PM practices are an instrument of managerial control that would intensify employees’ work and, via this process, lead to more absenteeism and presenteeism. Drawing on two matched waves of the French National Working Conditions survey ( N = 17,081), we found that goal setting and monitoring are associated with more absenteeism and presenteeism indirectly via work intensification. By contrast, performance evaluation reported negative, albeit weak, indirect associations with both behaviors. These results show that PM can take a toll on employees’ well-being and that the organizational and social context of attendance behaviors matters. They also hold clear practical implications for designing managerial practices that minimize their negative impact on well-being.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Health and Well-being; Employment and Welfare Studies; Job Satisfaction and Organizational Behavior; Presenteeism; Absenteeism; Attendance; Context (archaeology); Psychology; Applied psychology; Work (physics); Set (abstract data type); Business; Social psychology; Economics; Computer science; Engineering; Paleontology; Biology; Economic growth; Programming language; Mechanical engineering</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>13. Large Language Model in Creative Work: The Role of Collaboration Modality and User Expertise</h3>
+<div class="article-meta"><span class="badge journal">Management Science</span>
+<span class="badge date">2024-10-15</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Management Science</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2024-10-15</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1287/mnsc.2023.03014" target="_blank" rel="noopener">https://doi.org/10.1287/mnsc.2023.03014</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Zenan Chen</td><td class="affiliation-value">The University of Texas at Dallas; Naveen Jindal School of Management, University of Texas at Dallas, Richardson, Texas 75080;</td></tr>
+<tr><td class="affiliation-author">Jason Chan</td><td class="affiliation-value">University of Minnesota; Carlson School of Management, University of Minnesota, Minneapolis, Minnesota 55455</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Since the launch of ChatGPT in December 2022, large language models (LLMs) have been rapidly adopted by businesses to assist users in a wide range of open-ended tasks, including creative work. Although the versatility of LLM has unlocked new ways of human-artificial intelligence collaboration, it remains uncertain how LLMs should be used to enhance business outcomes. To examine the effects of human-LLM collaboration on business outcomes, we conducted an experiment where we tasked expert and nonexpert users to write an ad copy with and without the assistance of LLMs. Here, we investigate and compare two ways of working with LLMs: (1) using LLMs as “ghostwriters,” which assume the main role of the content generation task, and (2) using LLMs as “sounding boards” to provide feedback on human-created content. We measure the quality of the ads using the number of clicks generated by the created ads on major social media platforms. Our results show that different collaboration modalities can result in very different outcomes for different user types. Using LLMs as sounding boards enhances the quality of the resultant ad copies for nonexperts. However, using LLMs as ghostwriters did not provide significant benefits and is, in fact, detrimental to expert users. We rely on textual analyses to understand the mechanisms, and we learned that using LLMs as ghostwriters produces an anchoring effect, which leads to lower-quality ads. On the other hand, using LLMs as sounding boards helped nonexperts achieve ad content with low semantic divergence to content produced by experts, thereby closing the gap between the two types of users. This paper was accepted by D. J. Wu, information systems. Supplemental Material: The online appendix and data files are available at <a class="doi-link" href="https://doi.org/10.1287/mnsc.2023.03014" target="_blank" rel="noopener">https://doi.org/10.1287/mnsc.2023.03014</a> .</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Creativity in Education and Neuroscience; Knowledge Management and Sharing; Computational and Text Analysis Methods; Computer science; Modality (human–computer interaction); Work (physics); Knowledge management; Human–computer interaction; Process management; Business; Engineering; Mechanical engineering</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM; Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>14. Generative artificial intelligence and evaluating strategic decisions</h3>
+<div class="article-meta"><span class="badge journal">Strategic Management Journal</span>
+<span class="badge date">2024-11-14</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Strategic Management Journal</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2024-11-14</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1002/smj.3677" target="_blank" rel="noopener">https://doi.org/10.1002/smj.3677</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Anil R. Doshi</td><td class="affiliation-value">University College London; UCL School of Management University College London London UK; UCL School of Management, University College London, London, UK</td></tr>
+<tr><td class="affiliation-author">J. Jason Bell</td><td class="affiliation-value">University of Oxford; Science Oxford; Saïd Business School University of Oxford Oxford UK</td></tr>
+<tr><td class="affiliation-author">Emil Mirzayev</td><td class="affiliation-value">University College London; UCL School of Management University College London London UK; UCL School of Management, University College London, London, UK</td></tr>
+<tr><td class="affiliation-author">Bart Vanneste</td><td class="affiliation-value">University College London; UCL School of Management University College London London UK; UCL School of Management, University College London, London, UK</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract Research Summary Strategic decisions are uncertain and often irreversible. Hence, predicting the value of alternatives is important for strategic decision making. We investigate the use of generative artificial intelligence (AI) in evaluating strategic alternatives using business models generated by AI (study 1) or submitted to a competition (study 2). Each study uses a sample of 60 business models and examines agreement in business model rankings made by large language models (LLMs) and those by human experts. We consider multiple LLMs, assumed LLM roles, and prompts. We find that generative AI often produces evaluations that are inconsistent and biased. However, when aggregating evaluations, AI rankings tend to resemble those of human experts. This study highlights the value of generative AI in strategic decision making by providing predictions. Managerial Summary Managers are seeking to create value by integrating generative AI into their organizations. We show how managers can use generative AI to help evaluate strategic decisions. Generative AI&#x27;s single evaluations are often inconsistent or biased. However, if managers aggregate many evaluations across LLMs, prompts, or roles, the results show that the resulting evaluations tend to resemble those of human experts. This approach allows managers to obtain insight on strategic decisions across a variety of domains with relatively low investments in time or resources, which can be combined with human inputs.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Innovation and Knowledge Management; Big Data and Business Intelligence; Business Strategy and Innovation; Generative grammar; Artificial intelligence; Strategic planning; Business; Computer science; Management science; Machine learning; Process management; Economics; Marketing</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>15. A Mother’s Work Is Never Done: On Being a Mother in Academia</h3>
+<div class="article-meta"><span class="badge journal">Journal of Management Studies</span>
+<span class="badge date">2025-02-20</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Management Studies</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2025-02-20</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/joms.13203" target="_blank" rel="noopener">https://doi.org/10.1111/joms.13203</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Erica Pimentel</td><td class="affiliation-value">Queen&#x27;s University; Queen’s University; Address for reprints: Erica Pimentel, Smith School of Business, Queen&#x27;s University, Kingston, ON, Canada ([email protected])</td></tr>
+<tr><td class="affiliation-author">Soraya Bel Hadj Ali</td><td class="affiliation-value">Kedge Business School; KEDGE Business School</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">This essay is a call for recognition of the physical and emotional toll of motherhood on women in academia. Drawing on our experiences as Mothers–Professors–Researchers, we demonstrate how maternal bodies are experienced as being out of place in academic environments, existing in spaces where the rules of the game are made for bodies that do not look like our own. We offer some solutions to make academic spaces more inclusive and equitable for all. Motherhood arrived at different moments in our professional journeys. Soraya became a mother as her academic career began to take off. But even before her son was born, Soraya came to experience the push and pull of being a Mother–Professor–Researcher, the tripartite identity our academic lives have imposed on us. As months passed and Soraya&#x27;s pregnant body continued to grow, she felt obliged to take on additional teaching duties due to pressure from colleagues and academic leaders who framed her pregnancy (and subsequent maternity leave) as an abdication of duty. Where Soraya&#x27;s growing size betrayed her pregnant status, a lifetime of being socialized as a woman taught her to put a smile on her face and act in a way that made others comfortable, even if she was exhausted and swollen. In her book, The Managed Heart, Arlie Hochschild (1983) introduces the term emotional labour, which refers to the ways in which women are taught to manage their own emotions to make other people feel better. For pregnant Soraya, putting on a smile and taking on more work was her way of engaging in the emotional labour required to reassure her colleagues that her pregnancy would not turn her into a liability for the department. However, the smile did little to address the resentment Soraya felt for forgoing special moments during her pregnancy, like attending prenatal courses, in favour of teaching a night class at the university. It also did not settle her sense that despite having been a rising star prior to her pregnancy announcement, her new maternal status was making her something of a pariah in the department. Conversely, Erica became a mother 9 months before starting her PhD. She spent the first year of her PhD balancing coursework with childcare for a son who was born premature and was too young and too sick to attend daycare. Erica haphazardly pieced together childcare from her mother, mother-in-law, and cousins to care for her son while she attended classes. She worked on coursework at home with her son strapped to her body in a baby carrier, her chin leaning beside his small head, and her nose taking in his ‘baby smell’ as she worked. The toll of balancing motherhood and doctoral studies came to a head when Erica received an email at 11 PM from the PhD programme coordinator stating that she was expected at a research workshop the next morning at 9 AM, a day she did not have care planned for her son. This was just too much. Erica broke down in tears under the burden of mothering a sick baby, giving up her identity as a professional to pursue her dream of becoming an academic, and trying to go back to school as an adult. Erica&#x27;s emotion boiled over into a tersely worded email response to said administrator about how she found the programme&#x27;s demands unreasonable. This attempt at resistance resulted in a scolding for being unable to attend the workshop, as PhD students were expected to make themselves available for all academic events in the department. Erica felt frustrated and isolated, incapable of being an available mother to a baby who needed her and a dedicated student who could meet the minimum expectations of the doctoral program. Our early motherhood experiences reinforced what we would come to understand as an unspoken rule that motherhood is expected to take second place to our academic vocation. We were instructed to either act like childless people or be disciplined for prioritizing the needs of the small humans we recently brought into this world and that, quite literally, were dependent on our bodies for survival. In academia, motherhood becomes a punishable offence when it constrains a mother&#x27;s ability to make herself available for work. However, in our hearts, motherhood could not take second place to our vocation. We were drawn to our boys and felt unconditional love for them. We realized that we needed to prioritize work and motherhood – both needed to be number one at the same time – if we wanted to be the kinds of mothers our sons deserved and the kinds of colleagues our universities demanded. Managing our conduct in light of expectations about how academic mothers ought to behave is made more complex by the fact that maternal bodies can be difficult to control. Maternity, and particularly the postpartum stage, made us deeply aware of how little control we have over our biology. Gatrell (2013) describes maternal bodywork as the lengths to which mothers go to discipline their bodies into conforming to professional expectations based on a masculine ideal. For Soraya, breastfeeding brought pride in the fact that her body could produce the nutrients necessary to nourish her growing baby. However, it also meant that for the 2 years she breastfed, she experienced irregular menstruation. The absence of menses creates two stresses: First, not being able to reassure oneself of not being pregnant again, and second – perhaps more importantly – not being able to control the arrival of one&#x27;s period. Soraya experienced the humiliation of being in the middle of a lecture and feeling a rush of warm liquid running down her thigh. When she looked down and saw blood seeping through her pants, she felt as if the room was collapsing in on her. She immediately prayed for the earth to open below her so that she could be swallowed up to hide in shame or be teleported elsewhere to escape the classroom. Soraya felt ashamed of her ‘leaky body’ (Gatrell, 2013), which was seen as out of place in a research institution. Pregnant bodies are rarely seen in those hallowed halls, and the abnormality of women&#x27;s bodies in these spaces makes the challenges of motherhood even more palpable. Reflecting on this experience over a decade later, Soraya can still relate to the feeling of being ashamed for not having prophylactically worn a feminine hygiene product or not bringing a change of clothes to work. Inhabiting an uncontrollable body can feel like living through a moment of extreme deviance. Reflecting on the place of maternal bodies in academia, we have come to understand that maternal bodies, particularly in the postpartum period, are experienced as being out of place. Not only do they not belong, but mothers are expected to engage in a sort of ‘presenteeism’ (Gatrell, 2011), where they set aside their biology and comfort in favour of complying with social norms. For instance, a lactating mother will make sure she wears breast pads before putting on a blouse for work. This imposes unrealistic (and unnecessary) demands on mothers who are occupied with the demands of raising a new baby and must also be concerned with their wardrobe in ways others are not. Ultimately, balancing the demands of becoming mothers in academia with the logistical challenges of being Mothers–Professors–Researchers has required a new organization of our lives. This has meant that our days have extended to include two full shifts: eight working hours bookended by eight mothering hours. This is to say that becoming Mothers–Professors–Researchers imposes not only a physical toll but a mental one as well. Soraya and Erica recently travelled to Romania for a week to present their work at a prestigious conference. While at the conference, Erica received a tearful Facetime from her son, where he expressed feeling like ‘he didn&#x27;t have a mom anymore’ because Erica had been away for too long and begged her to come home right away. From halfway around the world, Erica looked into her son&#x27;s eyes over Facetime and felt a wave of guilt and shame come over her, taking her back to those feelings of having abandoned this same little boy to pursue her PhD all those years ago. The following month, Erica attended another conference closer to home in Canada, so she resolved to fly 3 hours to the conference in the morning and fly back home at night so she wouldn&#x27;t be away from her son for too long. Driving back home from the airport, Erica totalled her car. Waiting for a stop light to turn green, she became distracted by too many things on her mind and advanced into an intersection, where she was t-boned by an oncoming vehicle. Thankfully, no one was hurt. When she regained consciousness after the accident, Erica shakingly got out of the car to survey the damage. She sat down on the curb, staring at her car, which was now steaming and in pieces. She started bawling, overwhelmed with the pressure of being on the tenure track, trying to be a supermom, and feeling like she couldn&#x27;t do any of it right. Her car was a representation of how she felt: broken and immobile. Her mind was constantly running, flipping between making sure her son had everything he needed, and that her tenure dossier was shaping up. However, this balancing act had become untenable. Erica&#x27;s struggle reveals how motherhood is not just a way of being; it is also a way of doing. Being Mothers–Professors–Researchers means our minds never stop working, trying to optimize everywhere we can. Motherhood involves adopting practices like compulsive scheduling and extensive planning, which have become embedded in the modern expectations of the perfect mom (particularly in the upper-middle-class circles in which we find ourselves). At the same time, academia has instilled in us a desire to be the best versions of ourselves. We leverage our mothering practices in service of our academic careers, like using our extended workday to get more done and satisfy increasingly demanding tenure requirements, trying to excel both at work and at home. Yet, as Erica&#x27;s car accident revealed, this careful balancing act can have major consequences on our mental and physical well-being. Given our experience as mothers in academia, we are adamant that things need to change. Below, we outline our three-pillar suite of proposals to make academic spaces more inclusive and equitable toward mothers. In writing this essay, we have become quite aware of the ways in which we&#x27;ve been socialized to grin and bear the trials and humiliations of being Mothers–Professors–Researchers. We&#x27;ve given examples of only a few of the many times we&#x27;ve put our own desires second to make sure our sons don&#x27;t miss anything and that our institutions get our best. Reflecting on these experiences, we&#x27;re livid. Livid that we said yes to work when our bodies said no. Livid that we tried to achieve logistical miracles while suffering on the inside. Livid for accepting that we shouldn&#x27;t stand up for our own well-being. This is not to individualize a systemic problem but to recognize our own role in perpetuating reductionist roles for women and mothers in academia. Something must change. We call on mothers to be reflexive and oppose efforts to pigeonhole them. This starts by challenging the idea that a mother&#x27;s work is never done. One way to achieve some sense of logistical normalcy is by enlisting allies and delegating motherhood responsibilities to others. We must enlist our partners, family members, and friends to share in our children&#x27;s care. Some of our colleagues have hired nannies to fill in when they could not be present (we recognize the tremendous privilege of this practice). We urge universities to offer on-site, affordable childcare to help bridge the gap, particularly for parents of young children. We also need institutional policies that recognize the logistical challenges of parenting. For instance, Erica has been candid with her associate dean of faculty about her parenting responsibilities and their impact on course timetabling. He has been instrumental in helping her navigate university politics to obtain a schedule that allows Erica to align her familial and teaching responsibilities. However, Soraya has not been so lucky. When she asked for a course schedule that would accommodate her role as a single mother, she was told that she should be grateful for the accommodations she was given. Her university administrator explained quite frankly that she did not want to be seen as playing favourites, as there were other mothers on campus. Rather than make certain mothers grovel for accommodations, we call for institutional policies that are favourable to all mothers concerning issues like timetabling or progressive return from maternity leave. While mothers have a role to play in resisting societal norms, we cannot affect change alone. We need to cultivate allies, both at home and at school, particularly in institutions where non-mothers occupy most of the positions of power. This is achieved by raising the consciousness of these non-mothers who can advocate for change on our behalf. For all the ways we try to be superwomen, our bodies are not invincible. Caring for others can be physically exhausting, and we have all experienced our fair share of physical ailments due to using our bodies beyond what they can handle. We call for the normalization of maternal bodies. Pregnant bodies are rarely seen in academic environments, which is why they are such an aberration. The normalization of maternal bodies includes breaking down taboos around breastfeeding by creating dedicated breast-pumping spaces and sensitization campaigns to normalize this behaviour on campus. This can also be achieved by creating affinity groups of mothers on campus that can create a sense of community while enabling collective action to support maternal bodies on campus. The most obvious way to normalize maternal bodies is to have more of them around by hiring more women (particularly in leadership roles). Creating policies that make motherhood visible makes mothers – and their children – feel seen on campus. When women&#x27;s bodies do not feel like they belong, this can have long-term implications for expectations around how Mothers–Professors–Researchers present themselves on campus. We call for pushing back against societal expectations of how maternal bodies ought to look. Normalizing maternal bodies means recognizing these physical forms can exist in many shapes and sizes and that it is, quite summarily, no one&#x27;s business to police or comment on how these bodies look. Erica had the unfortunate experience of having a male student ask her about her choice to have a second child (she was not pregnant at the time and only had one child). Erica looked at the student with a puzzled look. He pointed at Erica&#x27;s stomach and answered, ‘Well, aren&#x27;t you pregnant?’ Looking down and noticing that her abdomen was not flat, Erica caught on. She looked up and answered in a sarcastic tone, ‘No, my dress is just unflattering’. Erica was quite offended by this encounter because she felt it crossed a boundary where students wouldn&#x27;t normally be commenting on her physique, but this student felt entitled to do so because, apparently, maternal bodies are fair game. When maternal bodies are common on campus and are normalized, they no longer become worthwhile topics of conversation. As the experiences disclosed above have evidenced, we see parenting as more than a biological imperative or a logistical challenge; it is an opportunity to have a hand in shaping the heart and mind of a new life. The emotional burden of parenting, like taking the time to imbue a child with the right values and helping guide them to make good decisions, is what is most taxing about being a parent. Recognizing the emotional cost of parenting could mean re-designing performance evaluation systems to more appropriately recognize the time and energy necessary to satisfy the pastoral role mothers – and parents more generally – occupy. From a university&#x27;s perspective, giving faculty the time and space to become emotionally invested in becoming good parents is not only a contribution to society but is also a human resources and equity issue. This could mean adapting performance and tenure evaluation criteria to consider the personal situation of parents – for example, giving parents the possibility to extend their tenure clock to account for the ways in which the emotional burden of parenting may undermine productivity. This could also mean considering parental and caregiving roles in the annual performance evaluation criteria when considering a faculty member&#x27;s service commitment to the university. If universities can become more hospitable to mothers (and fathers), this can have a significant impact on whether these institutions become employers of choice for young professionals. We call for the inclusion of flesh-and-blood mothers in the process of reevaluating tenure and evaluation guidelines within universities to ensure these policies include explicit considerations for the emotional and physical costs of motherhood. We also call for the inclusion of mothers on tenure and evaluation committees. Not only would this raise the prominence of maternal bodies on campus, but it would also ensure an ongoing voice for mothers in the implementation of policies on a case-by-case basis. This would guarantee that tenure and promotion decisions for mothers are made with the constraints of maternal bodies in mind. We can each name close friends who suffered through stillbirths or miscarriages and who were penalized by their universities for not being productive after these traumatic events. Placing a mother in a decision-making role on evaluation committees would ensure that someone having experienced a leaky and unpredictable maternal body can weigh in on its impact on tenure qualifications. By enlisting allies and resisting attitudes about motherhood, normalizing maternal bodies, and recognizing the emotional cost of mothering, we can support mothers in having a more inclusive and equitable experience in academia than the one we&#x27;ve had thus far. We need to do this if we want to retain the best and brightest in our institutions and, perhaps more importantly, set the example for our students as they decide what types of adults and mothers they might want to become. We hope our essay will empower mothers in academia to demand conditions that are more supportive and, where possible, help create them for others as well.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Gender Diversity and Inequality; Work-Family Balance Challenges; Mentoring and Academic Development; Work (physics); Sociology; Gender studies; Psychology; Engineering; Mechanical engineering</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>16. The News in Earnings Announcement Disclosures: Capturing Word Context Using LLM Methods</h3>
+<div class="article-meta"><span class="badge journal">Management Science</span>
+<span class="badge date">2025-04-07</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Management Science</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2025-04-07</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1287/mnsc.2024.05417" target="_blank" rel="noopener">https://doi.org/10.1287/mnsc.2024.05417</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Federico Siano</td><td class="affiliation-value">The University of Texas at Dallas; Naveen Jindal School of Management, University of Texas at Dallas, Richardson, Texas 75080</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">This study examines the information content of textual disclosures in firms’ earnings announcements. Using a large language model (LLM) to capture information in both words and word context, I show that the news in earnings press releases (i) explains three times more variation in short-window stock returns than a host of textual measures based on dictionary and non-LLM machine learning methods; (ii) doubles the R 2 of an array of financial statement surprises, modeled with conventional regression or machine learning approaches; and (iii) accounts for a large fraction of immediate price revisions within just five minutes of release. LLM-modeled conference calls further enhance R 2 by one fourth compared with press releases and financial surprises. Textual disclosures are more informative when earnings are less persistent and during periods of aggregate uncertainty. Most news arises from text describing numbers, at the beginning of the disclosure, and including novel contents. These findings highlight the role of firms’ textual disclosures in moving stock prices and advance our understanding of how investors utilize corporate disclosures. This paper was accepted by Suraj Srinivasan, accounting. Funding: The author gratefully acknowledges financial support from the Naveen Jindal School of Management. Supplemental Material: The online appendix and data files are available at <a class="doi-link" href="https://doi.org/10.1287/mnsc.2024.05417" target="_blank" rel="noopener">https://doi.org/10.1287/mnsc.2024.05417</a> .</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Auditing, Earnings Management, Governance; Financial Reporting and XBRL; Financial Reporting and Valuation Research; Earnings; Context (archaeology); Word (group theory); Accounting; Earnings management; Computer science; Econometrics; Business; Economics; Linguistics; History; Archaeology; Philosophy</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM; Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>17. How and for whom using generative AI affects creativity: A field experiment.</h3>
+<div class="article-meta"><span class="badge journal">Journal of Applied Psychology</span>
+<span class="badge date">2025-06-16</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Applied Psychology</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2025-06-16</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1037/apl0001296" target="_blank" rel="noopener">https://doi.org/10.1037/apl0001296</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Shuhua Sun</td><td class="affiliation-value">Tulane University; A. B. Freeman School of Business, Tulane University</td></tr>
+<tr><td class="affiliation-author">Zhuyi Angelina Li</td><td class="affiliation-value">Renmin University of China; School of Business, Renmin University of China</td></tr>
+<tr><td class="affiliation-author">Maw‐Der Foo</td><td class="affiliation-value">Nanyang Technological University; Nanyang Business School, Nanyang Technological University</td></tr>
+<tr><td class="affiliation-author">Jing Zhou</td><td class="affiliation-value">Jones College; Rice University; Jesse H. Jones Graduate School of Business, Rice University</td></tr>
+<tr><td class="affiliation-author">Jie Lu</td><td class="affiliation-value">Massachusetts Institute of Technology; MIT Sloan School of Management, Massachusetts Institute of Technology</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">We develop a theoretical perspective on how and for whom large language model (LLM) assistance influences creativity in the workplace. We propose that LLM assistance increases employees&#x27; creativity by providing cognitive job resources. Furthermore, we hypothesize that employees with high levels of metacognitive strategies-who actively monitor and regulate their thinking to achieve goals and solve problems-are more likely to leverage LLM assistance effectively to acquire cognitive job resources, thereby increasing creativity. Our hypotheses were supported by a field experiment, in which we randomly assigned employees in a technology consulting firm to either receive LLM assistance or not. The results are robust across both supervisor and external evaluator ratings of employee creativity. Our findings indicate that LLM assistance enhances employees&#x27; creativity by providing cognitive job resources, especially for employees with high (vs. low) levels of metacognitive strategies. Overall, our field experiment offers novel insights into the mediating and moderating mechanisms linking LLM assistance and employee creativity in the workplace. (PsycInfo Database Record (c) 2025 APA, all rights reserved).</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Creativity in Education and Neuroscience; Creativity; Psychology; Generative grammar; Field (mathematics); Cognitive psychology; Social psychology; Artificial intelligence; Computer science; Mathematics; Pure mathematics</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM; Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>18. The Unethical Consequences of Daily Presenteeism: Schadenfreude and Negative Gossip Toward Peers</h3>
+<div class="article-meta"><span class="badge journal">Journal of Business Ethics</span>
+<span class="badge date">2025-10-25</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Business Ethics</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2025-10-25</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1007/s10551-025-06185-5" target="_blank" rel="noopener">https://doi.org/10.1007/s10551-025-06185-5</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Neha Tripathi</td><td class="affiliation-value">National University of Singapore; National University of Singapore, Mochtar Riady Building, BIZ 1, 15 Kent Ridge Drive, Singapore, Singapore</td></tr>
+<tr><td class="affiliation-author">Mariella Miraglia</td><td class="affiliation-value">University of Liverpool; Management School, University of Liverpool, Chatham Street, Liverpool, L69 7ZH, UK</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract This study investigates the social and relational unethical consequences of presenteeism—working while sick—in the day-to-day work life. Specifically, it proposes and tests a theoretical model of the interplay of daily presenteeism components— start-of-workday and at-work presenteeism—and its association with negative social interactions in the workplace in terms of unethical responses—namely, schadenfreude (i.e., the experience of pleasure at others’ misfortunes) and negative gossip toward colleagues. In so doing, it identifies an explanatory emotion-based process linking presenteeism to unethical outcomes, that is daily anxiety. Combining conservation of resources (Hobfoll in Am Psychol 44(3):513–524, 1989) and ego depletion (Muraven and Baumeister in Psychol Bull 126(2):247–259, 2000) theories, the proposed model explains the effect of presenteeism on daily anxiety, which gives rise to schadenfreude and negative gossip behavior targeted at peers. Leveraging two daily diary studies (Study 1: daily observations = 664, individuals = 87; Study 2: daily observations = 528, individuals = 59) and multilevel modeling, the hypothesized model was empirically supported. The study presents novel insights into occupational health, behavioral ethics, and management, revealing the day-to-day social costs of working while ill that may affect coworkers’ reputation, ethical culture, and internal cohesiveness in the workplace.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Emotions and Moral Behavior; Psychology of Social Influence; Death Anxiety and Social Exclusion; Gossip; Psychology; Presenteeism; Social psychology; Pleasure; Group cohesiveness; Multilevel model; Affect (linguistics); Business ethics; Quality of Life Research; Selfishness; Job performance; Social comparison theory; Social relation; Social support; Survey data collection; Occupational stress; Social influence</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>19. The use of &lt;scp&gt;LLMs&lt;/scp&gt; to annotate data in management research: Foundational guidelines and warnings</h3>
+<div class="article-meta"><span class="badge journal">Strategic Management Journal</span>
+<span class="badge date">2025-10-29</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Strategic Management Journal</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2025-10-29</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1002/smj.70023" target="_blank" rel="noopener">https://doi.org/10.1002/smj.70023</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Natalie Carlson</td><td class="affiliation-value">University of Pennsylvania; The Wharton School University of Pennsylvania Philadelphia Pennsylvania USA</td></tr>
+<tr><td class="affiliation-author">Vanessa Burbano</td><td class="affiliation-value">Columbia University; Columbia Business School Columbia University New York New York USA</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract Research Summary The emergence of large language models (LLMs) offers new opportunities for AI integration in research, particularly for data annotation and text classification. However, researchers lack guidance on implementation best practices, as the benefits and risks of these tools remain poorly understood. We develop a foundational framework for effective LLM implementation in management research, providing structured guidance on key decisions throughout the research process. We illustrate this framework through an empirical application: classifying sustainability claims in crowdfunding projects. While LLMs can match or exceed traditional methods&#x27; performance at lower cost, we find that variations in prompt design can significantly affect results and downstream analyses. We develop procedures for sensitivity analysis and provide detailed documentation to help researchers implement robustness while maintaining methodological integrity. Managerial Summary Large language models (LLMs) offer powerful new tools for business research, especially for analyzing and categorizing text data. However, managers and researchers lack clear guidance on how to use these tools effectively and reliably. This study creates a practical framework for implementing LLMs in management research, covering key decisions from model selection to result validation. Using a real‐world example of analyzing sustainability claims in crowdfunding campaigns, we demonstrate that LLMs can match traditional methods while being faster and cheaper. However, small changes in how you instruct the AI can significantly alter results and business conclusions. We provide systematic procedures for testing result reliability and offer practical tools to help managers implement AI‐powered analysis while maintaining rigorous standards and avoiding misleading findings.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">FinTech, Crowdfunding, Digital Finance; Artificial Intelligence in Healthcare and Education; Sustainable Finance and Green Bonds; Computer science; Documentation; Key (lock); Robustness (evolution); Sustainability; Process management; Data science; Knowledge management; Competitive advantage; Risk analysis (engineering); Management science; Business intelligence; Business model; Best practice; Annotation; Reuse; Selection (genetic algorithm); Empirical research; Risk management</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>20. Beyond feasibility filters: How expertise heterogeneity enables innovation recognition</h3>
+<div class="article-meta"><span class="badge journal">Strategic Management Journal</span>
+<span class="badge date">2026-01-13</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Strategic Management Journal</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-01-13</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1002/smj.70060" target="_blank" rel="noopener">https://doi.org/10.1002/smj.70060</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Jacqueline N. Lane</td><td class="affiliation-value">Baim Institute for Clinical Research; Harvard Business School, Digital Data and Design Institute at Harvard, and Laboratory for Innovation Science at Harvard (LISH) Boston Massachusetts USA</td></tr>
+<tr><td class="affiliation-author">Zoe Szajnfarber</td><td class="affiliation-value">George Washington University; George Washington University Washington DC USA</td></tr>
+<tr><td class="affiliation-author">Jason Crusan</td><td class="affiliation-value">Department of the Premier and Cabinet; No Affiliation Perth Western Australia Australia</td></tr>
+<tr><td class="affiliation-author">Michael Menietti</td><td class="affiliation-value">Baim Institute for Clinical Research; Harvard Business School and Digital Data and Design Institute at Harvard Boston Massachusetts USA</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract Research Summary Organizations often struggle to identify promising innovations that balance novelty and feasibility in multidisciplinary domains, yet how does evaluator expertise heterogeneity shape these assessments? This study examines how evaluator expertise influences innovation evaluation through a field experiment with National Aeronautics and Space Administration&#x27;s (NASA) Astrobee Robotic Arm Challenge, involving 354 evaluators assessing 101 solutions. Domain‐spanning evaluators assign higher novelty ratings while maintaining similar feasibility ratings compared to domain‐specific evaluators. Domain‐adjacent evaluators show higher ratings on both dimensions. Human‐LLM analysis of 3007 evaluator comments reveals a two‐stage process: feasibility filtering (evaluating minimum viability) followed by integrative assessment (evaluating enhancement potential). Different expertise types serve complementary functions: domain‐spanning evaluators recognize enhancement potential while maintaining rigorous standards; domain‐adjacent evaluators show openness to novel approaches; domain‐specific evaluators ensure technical rigor. These findings suggest effective innovation evaluation depends on strategically combining complementary expertise types rather than identifying optimal individual evaluators. Managerial Summary Organizations often struggle to identify innovations that are both novel and feasible, risking missed breakthroughs or wasted resources. We study how evaluator expertise shapes innovation assessments in a field experiment with NASA, in which 354 evaluators reviewed 101 robotic arm designs. Evaluators with expertise spanning multiple domains recognize more novel yet feasible ideas. Those with single‐domain expertise provide essential technical gatekeeping but overlook cross‐domain improvements, while adjacent‐field experts are more open but less rigorous. Organizations can strengthen innovation selection by strategically combining these complementary expertise types—using domain‐specific experts for initial feasibility screening and domain‐spanning experts to identify integrative opportunities—rather than seeking one “ideal” evaluator.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Innovation and Knowledge Management; Technology Assessment and Management; Open Source Software Innovations; Novelty; Consistency (knowledge bases); Field (mathematics); Openness to experience; Computer science; Knowledge management; Multidisciplinary approach; Selection (genetic algorithm); Flexibility (engineering); Management science; Gatekeeping; Process management; Artificial intelligence; Data science; Operationalization; Space (punctuation); Open innovation; Perspective (graphical); Risk analysis (engineering)</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>21. How to Use Generative AI for Pricing</h3>
+<div class="article-meta"><span class="badge journal">MIT Sloan management review</span>
+<span class="badge date">2026-01-29</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">MIT Sloan management review</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-01-29</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.63383/kqje3927" target="_blank" rel="noopener">https://doi.org/10.63383/kqje3927</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Maxime Cohen</td><td class="affiliation-value">not available</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Generative AI is transforming retail pricing decisions by providing an accessible and low-cost alternative to traditional pricing algorithms. Unlike traditional approaches, LLM-based pricing relies on natural language prompts, not custom code and historical data. However, LLM-based pricing introduces challenges around consistency, explainability, and potential biases. Implementation examples demonstrate how to prompt LLMs and use their recommendations to optimize product and service pricing.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Explainable Artificial Intelligence (XAI); Stock Market Forecasting Methods; Artificial Intelligence in Healthcare and Education; Computer science; Product (mathematics); Variable pricing; Generative grammar; Service (business); Pricing strategies; Code (set theory); Artificial intelligence; Dynamic pricing; Generative model; Operations research; Marketing; Natural language; Economics; Natural (archaeology); Risk analysis (engineering)</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>22. Validating LLM Output? Prepare to Be ‘Persuasion Bombed’</h3>
+<div class="article-meta"><span class="badge journal">MIT Sloan management review</span>
+<span class="badge date">2026-02-03</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">MIT Sloan management review</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-02-03</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.63383/dbet9049" target="_blank" rel="noopener">https://doi.org/10.63383/dbet9049</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Steven Randazzo</td><td class="affiliation-value">not available</td></tr>
+<tr><td class="affiliation-author">Akshita Joshi</td><td class="affiliation-value">not available</td></tr>
+<tr><td class="affiliation-author">Kate Kellogg</td><td class="affiliation-value">not available</td></tr>
+<tr><td class="affiliation-author">Hila Lifshitz</td><td class="affiliation-value">not available</td></tr>
+<tr><td class="affiliation-author">Karim Lakhani</td><td class="affiliation-value">not available</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">A research study of management consultants who were asked to use a large language model to recommend strategic business decisions found that the AI responded to human validation attempts with persuasive rhetorical strategies. In addition to appealing to the user’s logic, sense of trust, and emotions, the AI also engaged in tactics such as flooding the user with large volumes of unrequested data and analyses that could overwhelm them and convince them to override their expert judgment.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">AI in Service Interactions; Ethics and Social Impacts of AI; Explainable Artificial Intelligence (XAI); Rhetorical question; Computer science; Knowledge management; Public relations; Business; Management science; Psychology; Process management; Marketing; Business model; Data science; Strategic management; Subject-matter expert; Management; Engineering ethics; Sociology</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM; Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>23. Who Invests, Who Gets Funded: Gender and Racial Bias in LLM-Generated Investment Advice</h3>
+<div class="article-meta"><span class="badge journal">Journal of Business Ethics</span>
+<span class="badge date">2026-02-06</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Business Ethics</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-02-06</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1007/s10551-026-06251-6" target="_blank" rel="noopener">https://doi.org/10.1007/s10551-026-06251-6</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Ye Emma Wang</td><td class="affiliation-value">not available</td></tr>
+<tr><td class="affiliation-author">Kexin Gu</td><td class="affiliation-value">not available</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Abstract Do large language models (LLMs) generate unbiased financial advice across investor and fund manager demographics? We develop a two-sided audit framework to evaluate demographic bias in LLM-generated investment advice and apply it to multiple large language models, with GPT-4 Turbo as the primary baseline. On the investor side, fund selections are similar across demographic groups and rely on financial criteria, but recommended investment amounts vary when investor names signal race or gender, despite identical age and income. On the fund manager side, capital allocations favor non-Black and male managers: racial disparities persist even under explicit disclosure, while gender-related differences are more pronounced under name-based cues. Bias patterns are qualitatively similar across models, with differences in magnitude between implicit and explicit demographic signaling. These results suggest that, even when LLMs incorporate core financial reasoning, demographic signals can affect allocation decisions, with effects that tend to be stronger under implicit signaling, potentially replicating existing market inequalities and raising concerns about impartiality in financial advising. The proposed audit framework provides a generalizable approach for identifying and evaluating demographic bias in AI-driven financial advisory systems.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">FinTech, Crowdfunding, Digital Finance; Artificial Intelligence in Healthcare and Education; Auditing, Earnings Management, Governance; Business ethics; Meritocracy; Audit; Investment (military); Investment management; Economics; Affect (linguistics); Actuarial science; Investment decisions; Race (biology); Financial market; Finance; Equity (law); Capital market; Quality of Life Research; Impartiality; Inequality; Human capital; Business; Demographic economics; Mutual fund; Accounting; Financial services; Prima facie; Advice (programming); Asset allocation; Corporate finance; Underwriting; Capital allocation line; Venture capital; Core (optical fiber); Gender bias</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>24. Work Design and Compensation Strategies in a Post‐ &lt;scp&gt;COVID&lt;/scp&gt; World: Evidence From Online Job Postings</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management</span>
+<span class="badge date">2026-02-11</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-02-11</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1002/hrm.70057" target="_blank" rel="noopener">https://doi.org/10.1002/hrm.70057</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Chunmian Ge</td><td class="affiliation-value">South China University of Technology; School of Business Administration South China University of Technology Guangzhou China</td></tr>
+<tr><td class="affiliation-author">Huiqi Deng</td><td class="affiliation-value">South China University of Technology; School of Business Administration South China University of Technology Guangzhou China</td></tr>
+<tr><td class="affiliation-author">Dongyuan Wu</td><td class="affiliation-value">Fudan University; School of Management Fudan University Shanghai China</td></tr>
+<tr><td class="affiliation-author">Hanwei Huang</td><td class="affiliation-value">University of International Business and Economics; City University of Hong Kong; London School of Economics and Political Science; Center for International Finance and Economics Research Tsinghua University Beijing China; Centre for Economic Performance London School of Economics London UK; College of Business City University of Hong Kong Hong Kong China</td></tr>
+<tr><td class="affiliation-author">James H. Dulebohn</td><td class="affiliation-value">Michigan State University; School of Human Resources and Labor Relations Michigan State University East Lansing Michigan USA</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">ABSTRACT This study examines how the COVID‐19 pandemic, as a disruptive external shock, has reshaped organizational practices, with particular emphasis on changes in work design and compensation strategies. Drawing on a unique dataset of over 1.8 million online job postings from Chinese publicly listed firms, we employed a large language model to systematically quantify work design characteristics. Using a difference‐in‐differences approach, we found that the pandemic significantly enhanced skill variety, task identity, task significance, autonomy, feedback, and work‐from‐home feasibility. Notably, these effects varied by occupational nonroutineness: occupations with high nonroutineness exhibited larger increases in task significance but smaller increases in other work design characteristics. Moreover, work design characteristics mediated the relationship between the pandemic and salaries, though these indirect effects were attenuated for nonroutine occupations. Additionally, we observed post‐pandemic adjustments in firms&#x27; compensation, including notable declines in performance‐related pay and insurance benefits, accompanied by increases in subsidies. These findings provide new insights into how organizations redesign work and adjust compensation strategies in response to large‐scale external shocks.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Work-Family Balance Challenges; COVID-19 Pandemic Impacts; Job Satisfaction and Organizational Behavior; Compensation (psychology); Job design; Task (project management); Work (physics); Business; Design science; Job analysis; Psychology; Computer science; Marketing; Task analysis; Knowledge management; Organizational architecture; Pandemic; Coronavirus disease 2019 (COVID-19); Public relations; Design elements and principles; Staff management; Job satisfaction; Applied psychology; Operations management</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>25. Are language models intelligent enough for entrepreneurial work? A language-centered perspective</h3>
+<div class="article-meta"><span class="badge journal">Journal of Business Venturing</span>
+<span class="badge date">2026-02-22</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Business Venturing</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-02-22</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1016/j.jbusvent.2026.106589" target="_blank" rel="noopener">https://doi.org/10.1016/j.jbusvent.2026.106589</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Stratos Ramoglou</td><td class="affiliation-value">Copenhagen Business School; University of Bristol; Copenhagen Business School, Denmark; University of Bristol Business School, University of Bristol, UK</td></tr>
+<tr><td class="affiliation-author">Shang Liang</td><td class="affiliation-value">Education University of Hong Kong; Department of Social Sciences and Policy Studies, The Education University of Hong Kong, Hong Kong</td></tr>
+<tr><td class="affiliation-author">Yanto Chandra</td><td class="affiliation-value">City University of Hong Kong; Department of Public and International Affairs, City University of Hong Kong, Hong Kong</td></tr>
+<tr><td class="affiliation-author">Jeffery S. McMullen</td><td class="affiliation-value">MODUL University Vienna; Imperial Valley College; NIHR Imperial Biomedical Research Centre; Imperial College London; Imperial Business School, Imperial College, UK; Vienna Institute for Global Studies (VIGS), Modul University, Austria</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Large Language Models (LLMs) are poised to fundamentally reshape entrepreneurial work, but it remains unclear whether this technology can support judgment-intensive entrepreneurial tasks. Prevailing skepticism holds that LLMs are inherently unreliable for such deep augmentation because, despite their language competence, they do not think. In contrast, we draw on Ludwig Wittgenstein and Alan Turing to advance a language-centered perspective on entrepreneurial work. Wittgenstein demystifies thought as linguistic activity and treats reasoning and understanding as linguistic abilities exercised in thinking. Extending this stance to the domain of machine intelligence, Turing grounds claims about intelligence in testable performances of language use. Together, they enable us to (1) conceptualize LLMs as an epistemic technology whose linguistic competence may suffice for the deep augmentation of entrepreneurship and (2) reorient research from skepticism toward fine-grained Turing tests of entrepreneurial work. We illustrate and support the language-centered perspective through two studies on crafting effective entrepreneurial narratives, a judgment-intensive task. Initially, we document that the LLM competently blends expert rhetorical strategies to create and refine narratives that effectively align with stakeholder needs. We then experimentally demonstrate that, when coupled with stakeholder-guided iterations, LLMs produce measurable improvements in narratives tailored to distinct stakeholder priorities. More broadly, our rethinking of entrepreneurial work through language-centered lenses helps theoretically support bold predictions about what entrepreneurs can accomplish with a nonhuman intelligence that has “only” mastered human language. • Challenges the philosophical underpinnings of skepticism about LLMs in entrepreneurial judgment • Positions LLMs as epistemic technologies for deep augmentation in entrepreneurship • Proposes a research program of fine-grained, task-specific Turing tests for entrepreneurial work • Demonstrates LLMs can craft and iteratively refine effective entrepreneurial narratives across diverse stakeholder priorities • Documents that LLMs help remove a key entry barrier to entrepreneurship</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Entrepreneurship Studies and Influences; AI in Service Interactions; Language and cultural evolution; Skepticism; Entrepreneurship; Epistemology; Perspective (graphical); Rhetorical question; Sociology; Narrative; Competence (human resources); Salience (neuroscience); Persuasion; Stakeholder; Cognitive science; Psychology; Linguistic competence; Philosophy of science; Situational ethics; Rationality; Knowledge management</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>26. From Text to Insight: Leveraging Large Language Models for Performance Evaluation in Management</h3>
+<div class="article-meta"><span class="badge journal">Personnel Psychology</span>
+<span class="badge date">2026-03-16</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Personnel Psychology</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-03-16</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/peps.70020" target="_blank" rel="noopener">https://doi.org/10.1111/peps.70020</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Ning Li</td><td class="affiliation-value">Tsinghua University; Tsinghua University Beijing China</td></tr>
+<tr><td class="affiliation-author">Huaikang Zhou</td><td class="affiliation-value">Tsinghua University; Tsinghua University Beijing China</td></tr>
+<tr><td class="affiliation-author">Mingze Xu</td><td class="affiliation-value">University of Washington; Seattle University; University of Washington Seattle USA</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">ABSTRACT This study examines whether Large Language Models can serve as reliable supplements to human judgment in evaluating text‐based task performance. Through two studies analyzing 744 knowledge‐based performance outputs, we compare ratings from multiple LLM architectures (GPT‐4, GPT‐5, o3, Claude Sonnet 4, DeepSeek v3) against human evaluators (individual and aggregated ratings), with external expert consensus serving as the validity benchmark for both. Our multi‐model design reveals that various LLMs demonstrate comparable or superior evaluation capabilities relative to human raters, with newer models showing enhanced performance. Using external expert panels as validation criteria, we find that advanced AI models achieve correlations up to r = 0.62 with expert consensus, surpassing aggregated human ratings ( r = 0.50). Different AI systems exhibit higher consistency than human evaluators while showing varying bias resistance: newer models demonstrate minimal susceptibility to halo effects, while earlier models show greater vulnerability (GPT‐4 declining 35.6%). Our findings validate LLMs as reliable supplements to human evaluation, establishing external benchmarking protocols and providing evidence‐based guidance for selecting appropriate models based on evaluation requirements and bias resistance needs.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Artificial Intelligence in Healthcare and Education; Ethics and Social Impacts of AI; Explainable Artificial Intelligence (XAI); Benchmarking; Consistency (knowledge bases); Computer science; Task (project management); Benchmark (surveying); Vulnerability (computing); Artificial intelligence; Ranking (information retrieval); Machine learning; Natural language processing; Language model; Resistance (ecology); Psychology; Sophistication; Human language; Data science; Comprehension; Cognitive psychology; Halo; Expert system</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>27. Startup Evaluations with Generative Artificial Intelligence: An Exploratory Study on Early-Stage Investments and Survival Predictions by Large Language Models</h3>
+<div class="article-meta"><span class="badge journal">Entrepreneurship Theory and Practice</span>
+<span class="badge date">2026-03-23</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Entrepreneurship Theory and Practice</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-03-23</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1177/10422587261430320" target="_blank" rel="noopener">https://doi.org/10.1177/10422587261430320</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Simon Kleinert</td><td class="affiliation-value">Leibniz University Hannover; Institute of Innovation Management and Entrepreneurship, Leibniz University Hannover, Hannover, Germany</td></tr>
+<tr><td class="affiliation-author">Diemo Urbig</td><td class="affiliation-value">Brandenburg University of Technology Cottbus-Senftenberg; Institute of Business and Economics, Brandenburg University of Technology Cottbus-Senftenberg, Cottbus, Germany</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">We examine the capabilities of large language models (LLMs) in evaluating early-stage ventures. In pre-registered experiments, we prompt selected LLMs to generate investment evaluations and survival predictions for an archival dataset of 171 new venture pitches under systematically varied information cues. We compare these LLM-generated evaluations with realized fundraising outcomes, post-campaign survival rates, and evaluations provided by a benchmark sample of human investors. LLMs show strong capabilities in mirroring real fundraising outcomes. In contrast, their apparent accuracy in predicting venture survival largely reflects prior exposure to some ventures’ digital footprints rather than genuine reasoning under uncertainty. Providing LLMs with scientific, contextual, and social information cues can improve their evaluations, but can also activate human-like heuristics, including anchoring and herding. Our study highlights LLMs’ potential in venture evaluations while cautioning that unobserved influences can mislead interpretations of their capabilities.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">FinTech, Crowdfunding, Digital Finance; Private Equity and Venture Capital; AI in Service Interactions; Mirroring; Exploratory research; Investment (military); Benchmark (surveying); Sample (material); Generative grammar; Investment decisions; Computer science; Language understanding; Exploratory analysis; Economics; Actuarial science; Business; Generative model; Marketing; Venture capital; Initial public offering; Experimental economics; Psychology; Artificial intelligence; Indigenous; Econometrics; New Ventures; Knowledge management; Impact investing; Consumption (sociology); Process (computing)</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>28. Balancing Efficiency and Safety: How and When Algorithmic Management Induces Gig Workers&#x27; Unsafe Behavior</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management</span>
+<span class="badge date">2026-03-30</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-03-30</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1002/hrm.70073" target="_blank" rel="noopener">https://doi.org/10.1002/hrm.70073</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Yanghao Zhu</td><td class="affiliation-value">Huazhong University of Science and Technology; School of Management Huazhong University of Science and Technology Wuhan Hubei China</td></tr>
+<tr><td class="affiliation-author">Lirong Long</td><td class="affiliation-value">Huazhong University of Science and Technology; School of Management Huazhong University of Science and Technology Wuhan Hubei China</td></tr>
+<tr><td class="affiliation-author">Shiyingzi Huang</td><td class="affiliation-value">Huazhong University of Science and Technology; School of Management Huazhong University of Science and Technology Wuhan Hubei China</td></tr>
+<tr><td class="affiliation-author">Y. G. Zhang</td><td class="affiliation-value">Southwestern University of Finance and Economics; School of Business Administration Southwestern University of Finance and Economics Chengdu Sichuan China</td></tr>
+<tr><td class="affiliation-author">Zejie Huang</td><td class="affiliation-value">Huazhong University of Science and Technology; School of Management Huazhong University of Science and Technology Wuhan Hubei China</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">ABSTRACT As the gig economy expands, millions of food delivery riders rely on gig platforms for their livelihoods, yet this growth has also been accompanied by rising traffic violations and accidents, posing risks to both rider and public safety. It is therefore critical to understand not only the mechanisms driving gig workers&#x27; unsafe behavior but also the factors that may mitigate it. Drawing on goal conflict theory and the job demands–resources model, we examine the mediating role of performance–safety goal conflict in the relationship between algorithmic goal setting and unsafe behavior, and further test a dual‐stage moderated mediation model in which algorithmic monitoring and conscientiousness function as boundary conditions. To test our hypotheses, we conducted four interrelated studies using a multi‐method approach: Study 1 employed LLM‐based text analysis ( N = 657), Study 2 adopted a video‐based scenario experiment ( N = 140), Study 3 implemented a three‐wave survey ( N = 242), and Study 4 incorporated objective behavioral data of unsafe behavior ( N = 151). Across these studies, the findings consistently demonstrate that algorithmic goal setting intensifies gig workers&#x27; performance–safety goal conflict, which in turn increases unsafe behavior. Moreover, algorithmic monitoring amplifies the effect of algorithmic goal setting on performance–safety goal conflict, whereas conscientiousness serves as a critical personal resource that mitigates the impact of performance–safety goal conflict on unsafe behavior. This study advances existing research by revealing how algorithmic management contributes to gig workers&#x27; unsafe behavior and offers practical implications for reducing such risks through both the optimization of algorithmic systems and the cultivation of gig workers&#x27; conscientiousness.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Digital Economy and Work Transformation; Mobile Crowdsensing and Crowdsourcing; Sharing Economy and Platforms; Conscientiousness; Computer science; Mediation; Risk analysis (engineering); Function (biology); Test (biology); Computer security; Resource (disambiguation); Business; Task (project management); Behavior change; Gig economy; Knowledge management; Resource management (computing); Process management; Boundary (topology); Shared resource</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>29. Leveraging AI to Capture Textual and Visual Elements: Insights for HRM Research and Practice</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management Journal</span>
+<span class="badge date">2026-03-30</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management Journal</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-03-30</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1111/1748-8583.70035" target="_blank" rel="noopener">https://doi.org/10.1111/1748-8583.70035</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Yin Liang</td><td class="affiliation-value">Newcastle University; Newcastle University Business School Newcastle‐upon‐Tyne UK</td></tr>
+<tr><td class="affiliation-author">Jeremy Aroles</td><td class="affiliation-value">University of York; School for Business and Society University of York York UK</td></tr>
+<tr><td class="affiliation-author">Yulei Li</td><td class="affiliation-value">Northumbria University; Computer and Information Sciences Northumbria University Newcastle‐upon‐Tyne UK</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">ABSTRACT This paper advances Human Resource Management (HRM) scholarship by introducing an accessible method to analyse of both visual and textual social media content in combination. Although HRM studies increasingly mobilise social media data, most approaches remain text‐centric, overlooking the HR‐relevant cues, embedded in images, that can inform micro, meso and macro level interpretations. We propose a method that classifies latent features from images and texts by leveraging the potential of a Large Language Model, namely GPT‐4o‐mini. We illustrate the method with an example that reports a promising performance of the GPT‐4o‐mini model. We highlight the conceptual potential of our method for theory development through multimodal data, enabling multi‐level analysis of HRM phenomena, and we discuss practical applications for HR practitioners in recruitment and selection, gauging employee engagement, and assessing organisational image, alongside limitations and considerations for responsible use.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">AI and HR Technologies; Employer Branding and e-HRM; Ethics and Social Impacts of AI; Computer science; Macro; Human resource management; Social media; Scholarship; Knowledge management; Resource (disambiguation); Data science; Conceptual framework; Human resources; Macro level; Visualization; Conceptual model; Management science</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>30. Qualitative Research in an Era of Artificial Intelligence: A Pragmatic Approach to Data Analysis, Workflow, and Computation</h3>
+<div class="article-meta"><span class="badge journal">Annual Review of Sociology</span>
+<span class="badge date">2026-05-11</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Annual Review of Sociology</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-05-11</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1146/annurev-soc-011824-104836" target="_blank" rel="noopener">https://doi.org/10.1146/annurev-soc-011824-104836</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Corey M. Abramson</td><td class="affiliation-value">Rice University; 1Department of Sociology and Center for Computational Insights into Inequality and Society (CIISR), Rice University, Houston, Texas, USA; email: [email removed]</td></tr>
+<tr><td class="affiliation-author">Tara Prendergast</td><td class="affiliation-value">University of Arizona; 2School of Sociology, University of Arizona, Tucson, Arizona, USA</td></tr>
+<tr><td class="affiliation-author">Zhuofan Li</td><td class="affiliation-value">Virginia Tech; 3Department of Sociology, Virginia Tech, Blacksburg, Virginia, USA</td></tr>
+<tr><td class="affiliation-author">Daniel Dohan</td><td class="affiliation-value">University of California San Francisco Medical Center; 4Philip R. Lee Institute for Health Policy Studies and Medical Cultures Lab, University of California San Francisco, San Francisco, California, USA</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Computational developments—particularly artificial intelligence—are reshaping social scientific research and raising new questions for in-depth methods such as ethnography and qualitative interviewing. Building on classic debates about computers in qualitative data analysis, we revisit possibilities and dangers in an era of automation, large language model chatbots, and big data. We introduce a typology of contemporary approaches to using computers in qualitative research: streamlining workflows, scaling up projects, hybrid analytical methods, the sociology of computation, and technological rejection. Drawing from scaled team ethnographies and solo research integrating computational social science alongside in-depth observation, we describe methodological choices across study life cycles, from literature reviews through data collection, coding, text retrieval, and representation. We argue that new technologies hold potential to address long-standing methodological challenges when deployed with knowledge, purpose, and ethical commitment. Yet, a pragmatic approach—moving beyond technological optimism and dismissal—is essential given rapidly changing tools that are both generative and dangerous. Computation now saturates research infrastructure, from algorithmic literature searches to scholarly metrics, making computational literacy a core methodological competence in and beyond sociology. We conclude that when used carefully and transparently, contemporary computational tools can meaningfully expand, rather than displace, the irreducible insights of qualitative research.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Computational and Text Analysis Methods; Qualitative Research Methods and Applications; Focus Groups and Qualitative Methods; Computer science; Data science; Qualitative research; Sociology; Management science; Generative grammar; Ethnography; Big data; Epistemology; Engineering ethics; Competence (human resources); Literacy; Typology; Computational sociology; Qualitative property; Scientific literacy; Educational research; Social research; Artificial intelligence; Social simulation; Qualitative reasoning; Cognitive science; Everyday life; Social theory; Computational model; Computational thinking; Emerging technologies; Social science; Social issues; Sociology of scientific knowledge; Research program</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Large Language Model</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>31. Voluntary Food Safety Information Disclosure and Firm Innovation</h3>
+<div class="article-meta"><span class="badge journal">Journal of Business Ethics</span>
+<span class="badge date">2026-05-20</span>
+<span class="badge available">Available</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Business Ethics</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-05-20</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1007/s10551-026-06349-x" target="_blank" rel="noopener">https://doi.org/10.1007/s10551-026-06349-x</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Suyun Chen</td><td class="affiliation-value">Nanjing Audit University; School of Internal Auditing, Nanjing Audit University, No.86 Yushan West Road, Pukou District, Nanjing City, Jiangsu Province, China</td></tr>
+<tr><td class="affiliation-author">Zongze Li</td><td class="affiliation-value">Henan Cancer Hospital; The Affiliated Cancer Hospital of Zhengzhou University &amp; Henan Cancer Hospital, 127 Dongming Road, Jinshui District, Zhengzhou City, Henan Province, China</td></tr>
+<tr><td class="affiliation-author">Hanwen Chen</td><td class="affiliation-value">Nanjing Audit University; School of Internal Auditing, Nanjing Audit University, No.86 Yushan West Road, Pukou District, Nanjing City, Jiangsu Province, China</td></tr>
+<tr><td class="affiliation-author">Feixue Xie</td><td class="affiliation-value">The University of Texas at El Paso; Department of Economics and Finance, Woody L. Hunt College of Business, University of Texas at El Paso, 500 W University Ave, El Paso, TX, USA</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge available">Available</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">Using a sample of A-share listed food-related firms in China from 2008 to 2023, this study investigates the impact of voluntary food safety information disclosure (VFSID) on firm innovation. Employing the philosophy–action–outcome framework, we apply large language model (LLM)-based text analysis to evaluate disclosure practices and construct a comprehensive VFSID index. Our results indicate that VFSID significantly enhances firm innovation, with a one-standard-deviation increase in disclosure quality associated with a 21% increase in patent output. Mechanism analyses reveal that VFSID operates through signaling effects by alleviating financing constraints and improving firms’ human capital structures. The innovation-enhancing effect of VFSID is stronger for firms that disclose more substantive content, are non-state-owned, exhibit lower ESG rating divergence, and operate outside agricultural product processing sectors. Additional analysis shows that VFSID enhances both green innovation and innovation persistence. By developing a stakeholder-centric evaluation framework for voluntary safety disclosure, this study provides stronger support for the signaling theory-based explanation than for the competing legitimacy theory-based explanation on the innovation-enhancing effect of VFSID.</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Food Safety and Hygiene; Corporate Social Responsibility Reporting; Organic Food and Agriculture; Voluntary disclosure; Business; Business ethics; Construct (python library); Quality (philosophy); Sample (material); Legitimacy; Food safety; Product (mathematics); Quality of Life Research; Turnover; Industrial organization; Mechanism (biology); Human capital; Accounting; Marketing; China; Capital (architecture); Affect (linguistics); Information asymmetry; Relational capital; Content analysis; Investment (military); Large sample; Capital market; Intellectual capital; Workplace safety; Product market</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">LLM; Large Language Model</td></tr></table>
+</div>
+</article>
+<section class="section"><h2>Missing Abstract</h2>
+<article class="article">
+<div class="article-header">
+<h3>1. Presenteeism: At Work -- But Out of It</h3>
+<div class="article-meta"><span class="badge journal">Harvard business review</span>
+<span class="badge date">2005-01-01</span>
+<span class="badge missing">Missing</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Harvard business review</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2005-01-01</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value">missing</td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">William A. Norcross</td><td class="affiliation-value">not available</td></tr>
+<tr><td class="affiliation-author">Théodore G. Ganiats</td><td class="affiliation-value">not available</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge missing">Missing</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">_No public abstract found._</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Psychotherapy Techniques and Applications; Work (physics); Presenteeism; Business; Psychology; Engineering; Social psychology; Absenteeism; Mechanical engineering</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>2. Cultural Determinants of Absenteeism and Presenteeism in a Multinational Environment</h3>
+<div class="article-meta"><span class="badge journal">Human Resource Management</span>
+<span class="badge date">2014-01-01</span>
+<span class="badge missing">Missing</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Human Resource Management</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2014-01-01</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value">missing</td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Małgorzata Striker</td><td class="affiliation-value">University of Łódź; University of Lódz, Poland</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge missing">Missing</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">_No public abstract found._</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Health and Well-being; Job Satisfaction and Organizational Behavior; Youth Substance Use and School Attendance; Presenteeism; Absenteeism; Multinational corporation; Business; Psychology; Social psychology; Finance</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>3. Supplemental Material for Are You Sick? Understanding the Effects of Coworker Presenteeism on Workplace Mistreatment</h3>
+<div class="article-meta"><span class="badge journal">Journal of Applied Psychology</span>
+<span class="badge date">2021-01-01</span>
+<span class="badge missing">Missing</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of Applied Psychology</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2021-01-01</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1037/apl0000966.supp" target="_blank" rel="noopener">https://doi.org/10.1037/apl0000966.supp</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value">not available</td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge missing">Missing</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">_No public abstract found._</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Workplace Violence and Bullying; Presenteeism; Psychology; Sick leave; Applied psychology; Social psychology; Absenteeism; Medicine; Physical therapy</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Presenteeism</td></tr></table>
+</div>
+</article>
+<article class="article">
+<div class="article-header">
+<h3>4. Business and management research on societal wellbeing: a historic, multi-journal and large language model analysis of the UN’s Sustainable Development Goals</h3>
+<div class="article-meta"><span class="badge journal">Journal of International Business Studies</span>
+<span class="badge date">2026-01-20</span>
+<span class="badge missing">Missing</span></div>
+</div>
+<div class="article-content">
+<table class="field-table"><tr><td class="field-name">Journal</td><td class="field-value">Journal of International Business Studies</td></tr>
+<tr><td class="field-name">Publication date</td><td class="field-value">2026-01-20</td></tr>
+<tr><td class="field-name">DOI URL</td><td class="field-value"><a class="doi-link" href="https://doi.org/10.1057/s41267-025-00833-8" target="_blank" rel="noopener">https://doi.org/10.1057/s41267-025-00833-8</a></td></tr>
+<tr><td class="field-name">Author &amp; affiliation</td><td class="field-value"><table class="affiliation-table"><thead><tr><th>Author</th><th>Affiliation</th></tr></thead><tbody><tr><td class="affiliation-author">Farzam Boroomand</td><td class="affiliation-value">University of South Carolina; Darla Moore School of Business, University of South Carolina, Columbia, SC, USA</td></tr>
+<tr><td class="affiliation-author">Anne S. Tsui</td><td class="affiliation-value">Peking University; Arizona State University; Arizona State University, Tempe, AZ, USA; Peking University, Beijing, China</td></tr>
+<tr><td class="affiliation-author">Ibrat Djabbarov</td><td class="affiliation-value">Imperial College London; Imperial College London, London, UK</td></tr>
+<tr><td class="affiliation-author">Arjen van Witteloostuijn</td><td class="affiliation-value">Vrije Universiteit Amsterdam; Vrije Universiteit Amsterdam, Amsterdam, The Netherlands</td></tr>
+<tr><td class="affiliation-author">Wilfred Mijnhardt</td><td class="affiliation-value">Heriot-Watt University; Erasmus University Rotterdam; Edinburgh Business School, Heriot-Watt University, Edinburgh, Scotland; Rotterdam School of Management, Erasmus University, Rotterdam, The Netherlands</td></tr></tbody></table></td></tr>
+<tr><td class="field-name">Abstract status</td><td class="field-value"><span class="badge missing">Missing</span></td></tr></table>
+<div class="abstract-block"><span class="abstract-label">Abstract</span><p class="abstract-text" lang="en">_No public abstract found._</p></div>
+<table class="field-table"><tr><td class="field-name">Keywords</td><td class="field-value">Sustainability in Higher Education; Corporate Social Responsibility Reporting; Innovation, Sustainability, Human-Machine Systems; International business; Sustainable development; Work (physics); New business development; Sustainable business; Business model; Business analysis; Political science; Economics; Business relationship management; Sustainability; Business management; Business; Public relations; Philosophy of business; Business economics; Sociology; Management science; International development; Global challenges; Business development; Business case; Knowledge management; Economic growth; Management development; Engineering ethics; Development studies; Entrepreneurship; Strategic management; Management; Electronic business; Business as usual</td></tr>
+<tr><td class="field-name">Matched concepts</td><td class="field-value">Large Language Model</td></tr></table>
+</div>
+</article>
+  </main>
+</body>
+</html>
