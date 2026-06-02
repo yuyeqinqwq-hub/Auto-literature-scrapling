@@ -2,7 +2,7 @@
 
 This repository packages a reusable Codex skill for monitoring new articles from an approved OBHRM/HCI/preprint target-source whitelist.
 
-The current whitelist contains 198 target sources: OBHRM candidates selected from FT50, UTD24, AJG/ABS 2024 `4`/`4*`, ABDC 2025 `A`/`A*`, 9 SJR Q1 HCI journals from `uni.ubicomp.net/hci/`, plus SSRN and NBER.
+The current whitelist contains approved OBHRM/HCI/preprint target sources selected from FT50, UTD24, AJG/ABS 2024 `4`/`4*`, ABDC 2025 `A`/`A*`, 9 SJR Q1 HCI journals from `uni.ubicomp.net/hci/`, plus SSRN and NBER. `Operations Research` is excluded from all selectable source lists.
 
 ## Safety Boundary
 
@@ -82,10 +82,10 @@ python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --start 2026-05
 Choose a narrower source list when broad keywords would produce too many articles:
 
 ```text
-all-198             all approved OBHRM/HCI/preprint whitelist sources
+all-whitelist       all approved OBHRM/HCI/preprint whitelist sources
 abs-4-and-4-star    ABS/AJG 2024 4 and 4* sources within the whitelist
 abs-4-star          ABS/AJG 2024 4* sources within the whitelist
-ft50                FT50 sources within the whitelist, excluding Operations Research
+ft50                FT50 sources within the whitelist
 utd24               UTD24 sources within the whitelist
 ```
 
@@ -129,7 +129,7 @@ They do need GitHub access to this repository with permission to run Actions.
    - `start_jst`: Tokyo-time inclusive start, such as `2026-05-18T00:00`.
    - `end_jst`: Tokyo-time exclusive end, such as `2026-05-25T00:00`.
    - `match_mode`: keep `any`.
-   - `journal_list`: choose `all-198`, `abs-4-and-4-star`, `abs-4-star`, `ft50`, or `utd24`.
+   - `journal_list`: choose `all-whitelist`, `abs-4-and-4-star`, `abs-4-star`, `ft50`, or `utd24`.
 6. Start the workflow and wait for it to finish.
 
 The workflow runs on GitHub-hosted servers. It generates Markdown, CSV, and HTML artifacts, publishes the public HTML copy into `site/reports/<run-folder>/`, commits the updated `site/` directory, and lets Netlify redeploy the public report page.

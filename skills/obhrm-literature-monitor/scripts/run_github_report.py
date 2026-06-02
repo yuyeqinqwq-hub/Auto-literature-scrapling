@@ -66,8 +66,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--push-lark", action="store_true")
     parser.add_argument(
         "--journal-list",
-        choices=["all-198", "abs-4-and-4-star", "abs-4-star", "ft50", "utd24"],
-        default="all-198",
+        choices=["all-whitelist", "abs-4-and-4-star", "abs-4-star", "ft50", "utd24"],
+        default="all-whitelist",
     )
     return parser.parse_args()
 

@@ -26,10 +26,10 @@ on:
       journal_list:
         description: "Target source list"
         required: true
-        default: "all-198"
+        default: "all-whitelist"
         type: choice
         options:
-          - all-198
+          - all-whitelist
           - abs-4-and-4-star
           - abs-4-star
           - ft50

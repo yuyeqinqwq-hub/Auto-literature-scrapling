@@ -35,7 +35,7 @@ Expected outputs:
 - `data/whitelist/journals.csv`
 - `data/whitelist/journals_review.md`
 
-Use `journals_review.md` for human review. The current target-source whitelist contains 198 sources: OBHRM candidates selected from FT50, UTD24, AJG/ABS 2024 `4`/`4*`, ABDC 2025 `A`/`A*`, 9 SJR Q1 HCI journals, and SSRN/NBER.
+Use `journals_review.md` for human review. The current target-source whitelist contains approved OBHRM/HCI/preprint sources selected from FT50, UTD24, AJG/ABS 2024 `4`/`4*`, ABDC 2025 `A`/`A*`, 9 SJR Q1 HCI journals, and SSRN/NBER. `Operations Research` is excluded from all selectable source lists.
 
 ### Run Trial Scan
 
@@ -70,10 +70,10 @@ python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --start 2026-05
 
 Use `--journal-list` to reduce scope for broad concepts. Available lists:
 
-- `all-198`: all approved OBHRM/HCI/preprint whitelist sources.
+- `all-whitelist`: all approved OBHRM/HCI/preprint whitelist sources.
 - `abs-4-and-4-star`: ABS/AJG 2024 4 and 4* sources within the whitelist.
 - `abs-4-star`: ABS/AJG 2024 4* sources within the whitelist.
-- `ft50`: FT50 sources within the whitelist, excluding Operations Research.
+- `ft50`: FT50 sources within the whitelist.
 - `utd24`: UTD24 sources within the whitelist.
 
 When a hosted HTML report exists and the scan has already been run, push only the short Lark summary without re-scanning:
@@ -145,7 +145,7 @@ Use `.github/workflows/generate-literature-report.yml` when a collaborator needs
 - `start_jst`: Tokyo-time inclusive start, such as `2026-05-18T00:00`.
 - `end_jst`: Tokyo-time exclusive end, such as `2026-05-25T00:00`.
 - `match_mode`: currently `any`.
-- `journal_list`: one of `all-198`, `abs-4-and-4-star`, `abs-4-star`, `ft50`, or `utd24`.
+- `journal_list`: one of `all-whitelist`, `abs-4-and-4-star`, `abs-4-star`, `ft50`, or `utd24`.
 - optional output label and scan strategy controls.
 
 The workflow runs `scripts/run_github_report.py`, which scans, renders standalone HTML, publishes the public copy under `site/reports/<run-folder>/`, uploads Markdown/HTML/CSV/log artifacts to the workflow run, and commits `site/` so Netlify can redeploy.

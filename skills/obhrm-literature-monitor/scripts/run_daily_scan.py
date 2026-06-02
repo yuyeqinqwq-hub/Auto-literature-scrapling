@@ -33,26 +33,27 @@ LOG_ROOT = REPO_ROOT / "logs"
 CROSSREF_API = "https://api.crossref.org/v1"
 OPENALEX_API = "https://api.openalex.org"
 
+EXCLUDED_JOURNAL_TITLES = {"operations research"}
+
 JOURNAL_LISTS: dict[str, dict[str, Any]] = {
-    "all-198": {
-        "label": "All 198 OBHRM/HCI/preprint whitelist sources",
+    "all-whitelist": {
+        "label": "All approved OBHRM/HCI/preprint whitelist sources",
         "tokens": set(),
     },
     "abs-4-and-4-star": {
-        "label": "ABS/AJG 2024 4 and 4* sources within the 198 whitelist",
+        "label": "ABS/AJG 2024 4 and 4* sources within the whitelist",
         "tokens": {"AJG2024_4", "AJG2024_4*"},
     },
     "abs-4-star": {
-        "label": "ABS/AJG 2024 4* sources within the 198 whitelist",
+        "label": "ABS/AJG 2024 4* sources within the whitelist",
         "tokens": {"AJG2024_4*"},
     },
     "ft50": {
-        "label": "FT50 sources within the 198 whitelist, excluding Operations Research",
+        "label": "FT50 sources within the whitelist",
         "tokens": {"FT50"},
-        "exclude_titles": {"operations research"},
     },
     "utd24": {
-        "label": "UTD24 sources within the 198 whitelist",
+        "label": "UTD24 sources within the whitelist",
         "tokens": {"UTD24"},
     },
 }
@@ -240,11 +241,10 @@ def journal_matches_list(source_lists: str, journal_list: str) -> bool:
 
 
 def journal_is_excluded(title: str, journal_list: str) -> bool:
-    excluded_titles = JOURNAL_LISTS[journal_list].get("exclude_titles", set())
-    return normalize_title(title) in excluded_titles
+    return normalize_title(title) in EXCLUDED_JOURNAL_TITLES
 
 
-def load_journals(path: Path, journal_list: str = "all-198") -> list[Journal]:
+def load_journals(path: Path, journal_list: str = "all-whitelist") -> list[Journal]:
     journals: list[Journal] = []
     with path.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
@@ -1249,7 +1249,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--journal-list",
         choices=list(JOURNAL_LISTS),
-        default="all-198",
+        default="all-whitelist",
         help="Named source subset to scan.",
     )
     return parser.parse_args()
