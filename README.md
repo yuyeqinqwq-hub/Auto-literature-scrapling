@@ -13,6 +13,7 @@ The project does not automate institutional login, bypass paywalls, solve CAPTCH
 - Markdown weekly literature report.
 - CSV record table with stable field order.
 - Standalone HTML report suitable for static hosting.
+- Keyword trajectory charts in the HTML report, backed by `obhrm_keyword_trends.json`.
 - Optional short Lark webhook summary containing only concepts, time window, and journal/platform counts.
 
 Per-article report fields are:
@@ -28,6 +29,7 @@ abstract status
 abstract
 keywords
 matched concepts
+matched fields
 ```
 
 ## Setup
@@ -78,6 +80,14 @@ Run a specific window with separate keyword concepts:
 ```powershell
 python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --timezone Asia/Tokyo --start "2026/05/18 00:00" --end "2026/05/25 00:00" --keyword Presenteeism --match-mode any
 ```
+
+Use quotes when a multi-word concept should be interpreted as one ordered phrase. The outer quotes are stripped before matching, so `"Business History"` is treated as the exact phrase `Business History`:
+
+```powershell
+python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --journal-list abs-4-star --journal-list ft50 --timezone Asia/Tokyo --start "1970/01/01 00:00" --end "2026/06/01 00:00" --keyword '"Business History"' --keyword Asia --keyword Engagement --match-mode all
+```
+
+The production search retrieves OpenAlex candidates by source/concept/window, then locally checks title, abstract, and keyword metadata. The CSV/Markdown `matched_fields` column shows which fields matched.
 
 Choose one or more source lists when broad keywords would produce too many articles. Repeating `--journal-list` scans the union of those lists:
 
@@ -143,6 +153,7 @@ Important permission rule: most users cannot click `Run workflow` inside another
 
 The workflow runs on GitHub-hosted servers. It generates Markdown, CSV, and HTML artifacts, publishes the public HTML copy into `site/reports/<run-folder>/`, commits the updated `site/` directory, and deploys the `site/` directory to GitHub Pages.
 It also uploads `obhrm_scan_trace.csv`, which shows source-by-source traversal details: journal/platform name, OpenAlex source id, concept, API total count, fetched count, pages fetched, status, and query URL.
+It also uploads `obhrm_keyword_trends.json`, which stores the per-keyword yearly counts used by the HTML trajectory charts.
 Technical OpenAlex controls are intentionally hidden from the normal `Run workflow` form; production web runs use the source-first OpenAlex strategy with exhaustive cursor paging by default.
 
 When `public_site_url` is blank, report links are generated from the running repository's GitHub Pages URL:

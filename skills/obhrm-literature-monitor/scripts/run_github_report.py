@@ -80,6 +80,11 @@ def run_started_at() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def workflow_version() -> str:
+    sha = os.environ.get("GITHUB_SHA", "").strip()
+    return sha[:12] if sha else "local"
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run scan, render HTML, publish site, and optionally push Lark.")
     parser.add_argument("--keyword", action="append", default=[], help="One keyword concept. Repeat up to 5 times.")
@@ -226,10 +231,12 @@ def main() -> int:
             f"- Window: {start.isoformat()} to {end.isoformat()}",
             f"- Run actor: {actor}",
             f"- Run started: {started_at}",
+            f"- Workflow version: {workflow_version()}",
             f"- Output folder: `{report_slug}`",
             f"- Public report: {public_report_url}",
             f"- Public index: {public_index_url}",
             "- Trace artifact: `obhrm_scan_trace.csv` shows source-by-source OpenAlex traversal.",
+            "- Trend artifact: `obhrm_keyword_trends.json` stores the yearly keyword counts used by the HTML charts.",
             f"- Lark: {lark_status}",
         ]
     )

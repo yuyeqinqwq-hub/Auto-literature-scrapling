@@ -12,6 +12,7 @@ description: Monitor OBHRM/HCI/preprint target-source articles, build and review
 - Pause for user review after generating `data/whitelist/journals_review.md`; do not run production scans against a new whitelist until the user confirms it.
 - Support `Asia/Tokyo`, `America/Chicago`, and `Asia/Shanghai` for user-entered windows. The weekly production window is previous Monday 00:00 inclusive to current Monday 00:00 exclusive in the selected timezone.
 - Keep keywords easy to replace through `config/monitor.yaml`, command-line arguments, or GitHub Actions keyword fields.
+- Treat quoted multi-word inputs such as `"Business History"` as ordered phrases by stripping only the outer quotes before matching. Do not imply full Web of Science query-builder support unless it is explicitly implemented.
 - For team self-service runs, prefer the GitHub Actions manual workflow over asking every teacher/student to install Codex locally.
 
 ## Compliance Boundary
@@ -51,6 +52,14 @@ Use active keywords from `config/monitor.yaml`, or pass up to five temporary key
 ```powershell
 python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --keyword "work engagement" --keyword turnover --keyword "self-sacrifice leadership" --match-mode any
 ```
+
+For ordered phrase searches, keep the phrase as one keyword. Quoted inputs are accepted and normalized:
+
+```powershell
+python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --keyword '"Business History"' --keyword Asia --match-mode all
+```
+
+The production pipeline retrieves candidates by OpenAlex source/concept/window and then performs local matching over public title, abstract, and keyword metadata. The `matched_fields` output shows whether the hit came from title, abstract, keywords, or a combination.
 
 The default scan strategy is `openalex-source`: resolve each whitelist source to its OpenAlex source id, then query each source/concept/window combination and write a source-by-source traversal trace. Use this for production and any research-sensitive search.
 Use `--strategy openalex-keyword` only as a fast exploratory shortcut: it searches OpenAlex globally by keyword/date first and then filters to the whitelist, so it can miss many whitelist articles in broad keywords or long windows. Use `--strategy crossref-journal` only as a fallback when OpenAlex source metadata appears incomplete.
@@ -119,6 +128,7 @@ Reports must include:
 - abstract
 - keywords
 - matched concepts
+- matched fields
 
 CSV outputs must use the same field order. Do not include fields not listed above in per-article outputs.
 
@@ -127,6 +137,8 @@ Generate the standalone HTML report from Markdown with:
 ```powershell
 python skills/obhrm-literature-monitor/scripts/render_report_html.py --input outputs/<run-folder>/obhrm_daily_report.md
 ```
+
+When `obhrm_keyword_trends.json` exists beside the Markdown report, the HTML renderer adds a `Keyword Trajectories` section with clickable per-keyword SVG charts and a combined multi-line chart. The trend charts show per-keyword yearly candidate counts within the selected sources/window; final article inclusion is still controlled by `match_mode`.
 
 Publish the HTML report into the Netlify static site directory with:
 
@@ -156,6 +168,7 @@ GitHub only shows `Run workflow` to users with sufficient permission on that rep
 The workflow runs `scripts/run_github_report.py`, which scans, renders standalone HTML, publishes the public copy under `site/reports/<run-folder>/`, uploads Markdown/HTML/CSV/log artifacts to the workflow run, commits `site/`, and deploys `site/` to GitHub Pages. If `public_site_url` is left blank in the workflow form, the workflow computes the fork's default GitHub Pages URL: `https://<github-user>.github.io/<repo-name>/`.
 
 The workflow also uploads `obhrm_scan_trace.csv`. Use this file to audit the traversal process: it records each source, source id, concept, API total count, fetched count, page count, status, and query URL.
+The workflow also uploads `obhrm_keyword_trends.json`, which stores the yearly keyword counts used by the HTML chart section.
 
 Repository secrets for Lark push:
 

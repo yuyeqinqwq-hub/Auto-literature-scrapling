@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 import re
 from pathlib import Path
 
@@ -272,6 +273,140 @@ a {
   overflow-wrap: anywhere;
 }
 a:hover { text-decoration: underline; }
+.trend-section {
+  margin-top: 30px;
+}
+.trend-intro {
+  color: var(--muted);
+  margin: -8px 0 18px;
+}
+.combined-trend {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 22px rgba(24, 33, 47, 0.06);
+}
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+.trend-card {
+  display: block;
+  min-height: 236px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  color: inherit;
+  box-shadow: 0 8px 22px rgba(24, 33, 47, 0.06);
+}
+.trend-card:hover {
+  border-color: #b7cdfb;
+  box-shadow: 0 14px 30px rgba(24, 33, 47, 0.10);
+  text-decoration: none;
+}
+.trend-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  min-height: 54px;
+}
+.trend-title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.22;
+  color: var(--trend-color, var(--accent));
+}
+.trend-count {
+  display: block;
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 3px;
+}
+.trend-open {
+  color: var(--trend-color, var(--accent));
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 800;
+}
+.trend-svg {
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.trend-axis {
+  fill: #9aa5b5;
+  font-size: 11px;
+}
+.trend-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 8px;
+}
+.trend-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: 10px;
+}
+.trend-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.trend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--trend-color, var(--accent));
+}
+.trend-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(15, 23, 42, 0.48);
+}
+.trend-modal:target {
+  display: flex;
+}
+.trend-modal-card {
+  width: min(1040px, 100%);
+  max-height: min(760px, calc(100vh - 56px));
+  overflow: auto;
+  background: var(--panel);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  padding: 22px 24px;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.25);
+}
+.trend-modal-top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 10px;
+}
+.trend-close {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  color: var(--muted);
+  font-weight: 800;
+}
 @media (max-width: 720px) {
   main { width: min(100% - 20px, 1120px); margin-top: 16px; }
   .hero { padding: 22px 20px; }
@@ -307,8 +442,13 @@ a:hover { text-decoration: underline; }
   .affiliation-value {
     padding-top: 2px;
   }
+  .trend-modal { padding: 12px; }
+  .trend-modal-card { padding: 18px; }
 }
 """
+
+
+CHART_COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef476f"]
 
 
 def repair_mojibake(text: str) -> str:
@@ -455,6 +595,210 @@ def article_badges(fields: list[tuple[str, str]]) -> str:
     return '<div class="article-meta">' + "\n".join(badges) + "</div>"
 
 
+def load_keyword_trends(path: Path) -> dict | None:
+    if not path.exists():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+    series = data.get("series")
+    if not isinstance(series, list) or not series:
+        return None
+    usable = [
+        item
+        for item in series
+        if isinstance(item, dict)
+        and item.get("concept")
+        and isinstance(item.get("points"), list)
+        and item.get("points")
+    ]
+    if not usable:
+        return None
+    data["series"] = usable
+    return data
+
+
+def trend_years(data: dict) -> list[int]:
+    years = [year for year in data.get("years", []) if isinstance(year, int)]
+    if years:
+        return list(range(min(years), max(years) + 1))
+    collected = []
+    for item in data.get("series", []):
+        for point in item.get("points", []):
+            year = point.get("year")
+            if isinstance(year, int):
+                collected.append(year)
+    return list(range(min(collected), max(collected) + 1)) if collected else []
+
+
+def points_for_series(item: dict, years: list[int]) -> list[int]:
+    by_year = {
+        int(point["year"]): int(point.get("count", 0))
+        for point in item.get("points", [])
+        if isinstance(point, dict) and isinstance(point.get("year"), int)
+    }
+    return [by_year.get(year, 0) for year in years]
+
+
+def chart_coordinates(
+    counts: list[int],
+    years: list[int],
+    width: int,
+    height: int,
+    padding: int,
+    max_y: int,
+) -> list[tuple[float, float]]:
+    if not years:
+        return []
+    span = max(len(years) - 1, 1)
+    usable_width = width - padding * 2
+    usable_height = height - padding * 2
+    coordinates = []
+    for index, count in enumerate(counts):
+        x = padding + (usable_width * index / span)
+        y = height - padding - (usable_height * count / max(max_y, 1))
+        coordinates.append((x, y))
+    return coordinates
+
+
+def points_attr(coordinates: list[tuple[float, float]]) -> str:
+    return " ".join(f"{x:.1f},{y:.1f}" for x, y in coordinates)
+
+
+def render_single_chart(
+    item: dict,
+    years: list[int],
+    color: str,
+    width: int = 320,
+    height: int = 130,
+    padding: int = 24,
+) -> str:
+    counts = points_for_series(item, years)
+    max_y = max(max(counts, default=0), 1)
+    coordinates = chart_coordinates(counts, years, width, height, padding, max_y)
+    if not coordinates:
+        return ""
+    baseline = height - padding
+    area_points = [(coordinates[0][0], baseline), *coordinates, (coordinates[-1][0], baseline)]
+    start_year = years[0]
+    end_year = years[-1]
+    peak_count = max(counts, default=0)
+    peak_index = counts.index(peak_count) if counts else 0
+    peak_x, peak_y = coordinates[peak_index]
+    return f"""
+<svg class="trend-svg" viewBox="0 0 {width} {height}" role="img" aria-label="{html.escape(str(item.get('concept', 'Keyword trend')))} yearly trend">
+  <line x1="{padding}" y1="{baseline}" x2="{width - padding}" y2="{baseline}" stroke="#d9e0ea" stroke-width="1"/>
+  <text class="trend-axis" x="{padding}" y="{height - 6}">{start_year}</text>
+  <text class="trend-axis" x="{width - padding}" y="{height - 6}" text-anchor="end">{end_year}</text>
+  <text class="trend-axis" x="{padding}" y="{padding - 8}">{max_y}</text>
+  <polygon points="{points_attr(area_points)}" fill="{color}" opacity="0.13"/>
+  <polyline points="{points_attr(coordinates)}" fill="none" stroke="{color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="{peak_x:.1f}" cy="{peak_y:.1f}" r="4" fill="{color}" stroke="#fff" stroke-width="2"/>
+</svg>
+"""
+
+
+def render_combined_chart(data: dict, years: list[int]) -> str:
+    series = data.get("series", [])
+    width = 900
+    height = 290
+    padding = 44
+    counts_by_series = [points_for_series(item, years) for item in series]
+    max_y = max([max(counts, default=0) for counts in counts_by_series] or [1])
+    baseline = height - padding
+    chart_lines = [
+        f'<line x1="{padding}" y1="{baseline}" x2="{width - padding}" y2="{baseline}" stroke="#d9e0ea" stroke-width="1"/>',
+        f'<text class="trend-axis" x="{padding}" y="{height - 14}">{years[0]}</text>',
+        f'<text class="trend-axis" x="{width - padding}" y="{height - 14}" text-anchor="end">{years[-1]}</text>',
+        f'<text class="trend-axis" x="{padding}" y="{padding - 14}">{max_y}</text>',
+    ]
+    legend = []
+    for index, item in enumerate(series):
+        color = CHART_COLORS[index % len(CHART_COLORS)]
+        coordinates = chart_coordinates(counts_by_series[index], years, width, height, padding, max_y)
+        if not coordinates:
+            continue
+        chart_lines.append(
+            f'<polyline points="{points_attr(coordinates)}" fill="none" stroke="{color}" '
+            'stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
+        )
+        legend.append(
+            '<span class="trend-legend-item">'
+            f'<span class="trend-swatch" style="--trend-color:{color}"></span>'
+            f"{html.escape(str(item.get('concept', 'Keyword')))}"
+            "</span>"
+        )
+    return (
+        '<div class="combined-trend">'
+        "<h3>Combined Keyword Trajectories</h3>"
+        f'<svg class="trend-svg" viewBox="0 0 {width} {height}" role="img" aria-label="Combined keyword yearly trend">'
+        + "\n".join(chart_lines)
+        + "</svg>"
+        + '<div class="trend-legend">'
+        + "\n".join(legend)
+        + "</div></div>"
+    )
+
+
+def render_keyword_trends(path: Path) -> str:
+    data = load_keyword_trends(path)
+    if not data:
+        return ""
+    years = trend_years(data)
+    if not years:
+        return ""
+    cards = []
+    modals = []
+    for index, item in enumerate(data.get("series", [])):
+        color = CHART_COLORS[index % len(CHART_COLORS)]
+        concept = str(item.get("concept", "Keyword"))
+        total = int(item.get("total", 0) or 0)
+        peak_year = item.get("peak_year") or "n/a"
+        peak_count = int(item.get("peak_count", 0) or 0)
+        chart = render_single_chart(item, years, color)
+        large_chart = render_single_chart(item, years, color, width=900, height=360, padding=52)
+        cards.append(
+            f'<a class="trend-card" href="#trend-{index}" style="--trend-color:{color}">'
+            '<div class="trend-card-header">'
+            "<div>"
+            f'<h3 class="trend-title">{html.escape(concept)}</h3>'
+            f'<span class="trend-count">{total} candidate appearances</span>'
+            "</div>"
+            '<span class="trend-open" aria-hidden="true">↗</span>'
+            "</div>"
+            + chart
+            + '<div class="trend-footer">'
+            f"<span>Peak: {html.escape(str(peak_year))}</span>"
+            f"<strong>{peak_count} papers</strong>"
+            "</div></a>"
+        )
+        modals.append(
+            f'<div id="trend-{index}" class="trend-modal">'
+            '<div class="trend-modal-card">'
+            '<div class="trend-modal-top">'
+            "<div>"
+            f'<h2 style="color:{color}; margin-bottom:4px;">{html.escape(concept)}</h2>'
+            f'<p class="trend-intro">{total} candidate appearances; peak {html.escape(str(peak_year))}: {peak_count} papers.</p>'
+            "</div>"
+            '<a class="trend-close" href="#">Close</a>'
+            "</div>"
+            + large_chart
+            + "</div></div>"
+        )
+    return (
+        '<section class="trend-section">'
+        "<h2>Keyword Trajectories</h2>"
+        '<p class="trend-intro">Each chart shows yearly candidate appearances for one keyword within the selected source lists and time window. Click a card to enlarge it.</p>'
+        + render_combined_chart(data, years)
+        + '<div class="trend-grid">'
+        + "\n".join(cards)
+        + "</div>"
+        + "\n".join(modals)
+        + "</section>"
+    )
+
+
 def markdown_to_html(markdown: str) -> str:
     lines = markdown.splitlines()
     body: list[str] = []
@@ -553,6 +897,9 @@ def render(markdown_path: Path, output_path: Path) -> None:
     title = "OBHRM Weekly Literature Report"
     content = markdown_path.read_text(encoding="utf-8")
     html_body = markdown_to_html(content)
+    trend_html = render_keyword_trends(markdown_path.with_name("obhrm_keyword_trends.json"))
+    if trend_html:
+        html_body = html_body.replace("</section>", "</section>\n" + trend_html, 1)
     document = f"""<!doctype html>
 <html lang="en">
 <head>

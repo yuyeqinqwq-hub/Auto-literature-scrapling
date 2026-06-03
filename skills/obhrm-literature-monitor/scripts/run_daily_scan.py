@@ -10,6 +10,7 @@ import hmac
 import json
 import os
 import re
+import subprocess
 import time
 import urllib.error
 import urllib.parse
@@ -197,7 +198,7 @@ def parse_keywords(
     if cli_keyword_lines:
         name = "cli-keywords"
         concepts = cli_keyword_lines
-    cleaned = [str(item).strip() for item in concepts if str(item).strip()]
+    cleaned = [normalize_keyword_concept(str(item)) for item in concepts if normalize_keyword_concept(str(item))]
     if not cleaned:
         raise ValueError("No keywords configured. Add concepts to config/monitor.yaml or pass --keyword/--keywords.")
     if len(cleaned) > 5:
@@ -205,6 +206,19 @@ def parse_keywords(
     if mode not in {"any", "all"}:
         raise ValueError("match_mode must be either 'any' or 'all'.")
     return name, mode, cleaned
+
+
+def normalize_keyword_concept(concept: str) -> str:
+    value = re.sub(r"\s+", " ", str(concept or "").strip())
+    quote_pairs = {
+        '"': '"',
+        "'": "'",
+        "\u201c": "\u201d",
+        "\u2018": "\u2019",
+    }
+    if len(value) >= 2 and value[0] in quote_pairs and value[-1] == quote_pairs[value[0]]:
+        value = value[1:-1].strip()
+    return re.sub(r"\s+", " ", value)
 
 
 def parse_local_datetime(value: str, timezone: str) -> datetime:
@@ -741,6 +755,49 @@ def keyword_matches(article: Article, concepts: list[str], match_mode: str = "an
     return bool(article.matched_concepts)
 
 
+def openalex_work_key(work: dict[str, Any]) -> str:
+    return str(work.get("doi") or work.get("id") or work.get("display_name") or "").strip().lower()
+
+
+def openalex_work_year(work: dict[str, Any]) -> str:
+    year = work.get("publication_year")
+    if isinstance(year, int):
+        return str(year)
+    value = str(work.get("publication_date") or "").strip()
+    if len(value) >= 4 and value[:4].isdigit():
+        return value[:4]
+    return ""
+
+
+def record_keyword_trends(
+    trend_counts: dict[str, dict[str, set[str]]],
+    concept: str,
+    works: list[dict[str, Any]],
+) -> None:
+    concept_counts = trend_counts.setdefault(concept, {})
+    for work in works:
+        year = openalex_work_year(work)
+        key = openalex_work_key(work)
+        if not year or not key:
+            continue
+        concept_counts.setdefault(year, set()).add(key)
+
+
+def record_article_trends(
+    trend_counts: dict[str, dict[str, set[str]]],
+    concepts: list[str],
+    articles: list[Article],
+) -> None:
+    for article in articles:
+        if not article.publication_date[:4].isdigit():
+            continue
+        year = article.publication_date[:4]
+        key = article.doi or f"{article.title.lower()}::{article.journal.lower()}"
+        for concept in concepts:
+            if concept in article.matched_concepts:
+                trend_counts.setdefault(concept, {}).setdefault(year, set()).add(key)
+
+
 def query_crossref_journal(
     journal: Journal,
     start: datetime,
@@ -986,20 +1043,22 @@ def scan_articles_keyword_first(
     per_keyword: int,
     max_pages: int,
     log: list[str],
+    trend_counts: dict[str, dict[str, set[str]]] | None = None,
 ) -> list[Article]:
     whitelist_issns, whitelist_titles = journal_index(journals)
     raw_works: list[dict[str, Any]] = []
     for concept in concepts:
-        raw_works.extend(
-            query_openalex_keyword(
-                concept=concept,
-                start=start,
-                end=end,
-                per_page=per_keyword,
-                max_pages=max_pages,
-                log=log,
-            )
+        works = query_openalex_keyword(
+            concept=concept,
+            start=start,
+            end=end,
+            per_page=per_keyword,
+            max_pages=max_pages,
+            log=log,
         )
+        if trend_counts is not None:
+            record_keyword_trends(trend_counts, concept, works)
+        raw_works.extend(works)
 
     articles: list[Article] = []
     skipped = 0
@@ -1027,6 +1086,7 @@ def scan_articles_source_first(
     limit_journals: int | None,
     log: list[str],
     trace_rows: list[dict[str, Any]],
+    trend_counts: dict[str, dict[str, set[str]]] | None = None,
 ) -> list[Article]:
     selected_journals = journals[:limit_journals] if limit_journals else journals
     raw_works: list[dict[str, Any]] = []
@@ -1057,21 +1117,22 @@ def scan_articles_source_first(
             )
             continue
         for concept in concepts:
-            raw_works.extend(
-                query_openalex_source_keyword(
-                    journal=journal,
-                    source=source,
-                    concept=concept,
-                    start=start,
-                    end=end,
-                    per_page=per_keyword,
-                    max_pages=max_pages,
-                    source_index=index,
-                    source_count=len(selected_journals),
-                    log=log,
-                    trace_rows=trace_rows,
-                )
+            works = query_openalex_source_keyword(
+                journal=journal,
+                source=source,
+                concept=concept,
+                start=start,
+                end=end,
+                per_page=per_keyword,
+                max_pages=max_pages,
+                source_index=index,
+                source_count=len(selected_journals),
+                log=log,
+                trace_rows=trace_rows,
             )
+            if trend_counts is not None:
+                record_keyword_trends(trend_counts, concept, works)
+            raw_works.extend(works)
 
     articles: list[Article] = []
     for work in raw_works:
@@ -1118,6 +1179,7 @@ def write_csv_report(articles: list[Article], path: Path) -> None:
         "abstract",
         "keywords",
         "matched_concepts",
+        "matched_fields",
     ]
     with path.open("w", encoding="utf-8-sig", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -1140,6 +1202,7 @@ def write_csv_report(articles: list[Article], path: Path) -> None:
                     "authors": csv_value(article.authors),
                     "affiliations": affiliation_value,
                     "matched_concepts": csv_value(article.matched_concepts),
+                    "matched_fields": csv_value(article.matched_fields),
                 }
             )
 
@@ -1171,6 +1234,52 @@ def write_trace_report(trace_rows: list[dict[str, Any]], path: Path) -> None:
             writer.writerow({field: row.get(field, "") for field in fieldnames})
 
 
+def serialize_keyword_trends(
+    concepts: list[str],
+    trend_counts: dict[str, dict[str, set[str]]],
+) -> dict[str, Any]:
+    all_years: set[int] = set()
+    series: list[dict[str, Any]] = []
+    for concept in concepts:
+        year_sets = trend_counts.get(concept, {})
+        points = []
+        total = 0
+        for year_text, keys in sorted(year_sets.items()):
+            if not year_text.isdigit():
+                continue
+            year = int(year_text)
+            count = len(keys)
+            total += count
+            all_years.add(year)
+            points.append({"year": year, "count": count})
+        peak = max(points, key=lambda item: item["count"], default={"year": "", "count": 0})
+        series.append(
+            {
+                "concept": concept,
+                "total": total,
+                "peak_year": peak["year"],
+                "peak_count": peak["count"],
+                "points": points,
+            }
+        )
+    return {
+        "description": "Per-keyword yearly candidate counts within the selected source lists and time window.",
+        "years": sorted(all_years),
+        "series": series,
+    }
+
+
+def write_keyword_trends(
+    concepts: list[str],
+    trend_counts: dict[str, dict[str, set[str]]],
+    path: Path,
+) -> None:
+    path.write_text(
+        json.dumps(serialize_keyword_trends(concepts, trend_counts), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
 def article_markdown(article: Article, index: int) -> str:
     abstract = article.abstract if article.abstract else "_No public abstract found._"
     abstract_status_icon = "Available" if article.abstract_status != "missing" else "Missing"
@@ -1192,6 +1301,7 @@ def article_markdown(article: Article, index: int) -> str:
 | Abstract | {abstract} |
 | Keywords | {csv_value(article.keywords) or "not available"} |
 | Matched concepts | {csv_value(article.matched_concepts)} |
+| Matched fields | {csv_value(article.matched_fields)} |
 
 """
 
@@ -1205,6 +1315,8 @@ def write_markdown_report(
     start: datetime,
     end: datetime,
     journal_count: int,
+    journal_lists: list[str],
+    workflow_version: str,
 ) -> None:
     missing = [article for article in articles if article.abstract_status == "missing"]
     available = [article for article in articles if article.abstract_status != "missing"]
@@ -1214,7 +1326,10 @@ def write_markdown_report(
         "",
         f"**Window:** {start.isoformat()} to {end.isoformat()}  ",
         f"**Concepts:** {csv_value(concepts)}  ",
+        f"**Match mode:** {match_mode}  ",
+        f"**Selected journal lists:** {csv_value(journal_lists)}  ",
         f"**Target journal/platform whitelist size:** {journal_count}  ",
+        f"**Workflow version:** {workflow_version}  ",
         f"**Matched articles:** {len(articles)}  ",
         f"**Missing abstracts:** {len(missing)}",
         "",
@@ -1271,6 +1386,23 @@ def send_lark(text: str) -> None:
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         response.read()
+
+
+def workflow_version() -> str:
+    sha = os.environ.get("GITHUB_SHA", "").strip()
+    if sha:
+        return sha[:12]
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short=12", "HEAD"],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except Exception:
+        return "local"
+    return result.stdout.strip() or "local"
 
 
 def format_lark_summary(
@@ -1379,8 +1511,10 @@ def main() -> int:
     report_path = output_dir / "obhrm_daily_report.md"
     csv_path = output_dir / "obhrm_daily_records.csv"
     trace_path = output_dir / "obhrm_scan_trace.csv"
+    trend_path = output_dir / "obhrm_keyword_trends.json"
     log_path = log_dir / "run.log"
     trace_rows: list[dict[str, Any]] = []
+    trend_counts: dict[str, dict[str, set[str]]] = {}
     log: list[str] = [
         f"Start: {datetime.now().isoformat(timespec='seconds')}",
         f"Window: {start.isoformat()} to {end.isoformat()}",
@@ -1403,6 +1537,7 @@ def main() -> int:
             limit_journals=args.limit_journals,
             log=log,
         )
+        record_article_trends(trend_counts, concepts, articles)
     elif args.strategy == "openalex-source":
         articles = scan_articles_source_first(
             journals=journals,
@@ -1415,6 +1550,7 @@ def main() -> int:
             limit_journals=args.limit_journals,
             log=log,
             trace_rows=trace_rows,
+            trend_counts=trend_counts,
         )
     else:
         selected_journals = journals[: args.limit_journals] if args.limit_journals else journals
@@ -1427,9 +1563,11 @@ def main() -> int:
             per_keyword=args.per_keyword,
             max_pages=args.max_pages,
             log=log,
+            trend_counts=trend_counts,
         )
     write_csv_report(articles, csv_path)
     write_trace_report(trace_rows, trace_path)
+    write_keyword_trends(concepts, trend_counts, trend_path)
     write_markdown_report(
         articles=articles,
         path=report_path,
@@ -1439,12 +1577,15 @@ def main() -> int:
         start=start,
         end=end,
         journal_count=len(journals),
+        journal_lists=journal_lists,
+        workflow_version=workflow_version(),
     )
 
     log.append(f"Matched articles: {len(articles)}")
     log.append(f"Report: {report_path}")
     log.append(f"CSV: {csv_path}")
     log.append(f"Trace: {trace_path}")
+    log.append(f"Keyword trends: {trend_path}")
 
     if args.push_lark:
         try:
@@ -1465,6 +1606,7 @@ def main() -> int:
     log_path.write_text("\n".join(log) + "\n", encoding="utf-8")
     print(f"Wrote {report_path}")
     print(f"Wrote {csv_path}")
+    print(f"Wrote {trend_path}")
     print(f"Wrote {log_path}")
     print(f"Matched articles: {len(articles)}")
     return 0

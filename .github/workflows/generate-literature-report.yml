@@ -218,6 +218,7 @@ jobs:
             outputs/${{ steps.generate.outputs.report_dir }}/obhrm_daily_report.html
             outputs/${{ steps.generate.outputs.report_dir }}/obhrm_daily_records.csv
             outputs/${{ steps.generate.outputs.report_dir }}/obhrm_scan_trace.csv
+            outputs/${{ steps.generate.outputs.report_dir }}/obhrm_keyword_trends.json
             logs/${{ steps.generate.outputs.report_dir }}/run.log
 
       - name: Commit published site
