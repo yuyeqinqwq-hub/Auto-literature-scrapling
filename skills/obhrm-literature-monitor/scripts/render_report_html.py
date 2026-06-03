@@ -168,6 +168,28 @@ h3 {
   font-size: 26px;
   font-weight: 800;
 }
+.summary-table {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(24, 33, 47, 0.04);
+}
+.summary-table th,
+.summary-table td {
+  padding: 12px 14px;
+}
+.summary-table th {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.empty-note {
+  color: var(--muted);
+  background: var(--panel);
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
 table {
   width: 100%;
   border-collapse: collapse;
@@ -281,12 +303,86 @@ a:hover { text-decoration: underline; }
   margin: -8px 0 18px;
 }
 .combined-trend {
+  position: relative;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 18px 20px;
   margin-bottom: 18px;
   box-shadow: 0 8px 22px rgba(24, 33, 47, 0.06);
+}
+.combined-trend-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+.chart-mode-toggle {
+  display: inline-flex;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 3px;
+  background: #f8fafc;
+}
+.chart-mode-button {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 10px;
+}
+.chart-mode-button.active {
+  background: var(--panel);
+  color: var(--accent-strong);
+  box-shadow: 0 2px 7px rgba(24, 33, 47, 0.10);
+}
+.combined-svg[hidden] {
+  display: none;
+}
+.trend-hover-zone {
+  fill: transparent;
+  pointer-events: all;
+}
+.trend-hover-line {
+  display: none;
+  stroke: #94a3b8;
+  stroke-dasharray: 4 4;
+  stroke-width: 1.4;
+}
+.trend-tooltip {
+  display: none;
+  position: absolute;
+  z-index: 5;
+  max-width: min(460px, calc(100% - 40px));
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.98);
+  color: var(--ink);
+  box-shadow: 0 16px 42px rgba(24, 33, 47, 0.16);
+  font-size: 13px;
+}
+.trend-tooltip-title {
+  color: var(--accent-strong);
+  font-size: 15px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+.trend-tooltip-row {
+  border-top: 1px solid #edf1f6;
+  padding-top: 7px;
+  margin-top: 7px;
+}
+.trend-tooltip-keyword {
+  font-weight: 900;
+}
+.trend-tooltip-meta {
+  color: var(--muted);
 }
 .trend-grid {
   display: grid;
@@ -325,6 +421,7 @@ a:hover { text-decoration: underline; }
   display: block;
   color: var(--muted);
   font-size: 14px;
+  font-weight: 800;
   margin-top: 3px;
 }
 .trend-open {
@@ -450,6 +547,109 @@ a:hover { text-decoration: underline; }
 
 CHART_COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef476f"]
 
+REPORT_SCRIPT = """
+<script>
+(() => {
+  const escapeHtml = (value) => String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+  const formatTopWork = (work) => {
+    if (!work || !work.title) return "No top-cited candidate metadata available.";
+    const parts = [];
+    if (work.journal) parts.push(escapeHtml(work.journal));
+    if (work.publication_date) parts.push(escapeHtml(work.publication_date));
+    parts.push(`${Number(work.cited_by_count || 0)} citations`);
+    const link = work.doi_url || work.openalex_url;
+    const title = link
+      ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener">${escapeHtml(work.title)}</a>`
+      : escapeHtml(work.title);
+    return `${title}<br><span class="trend-tooltip-meta">${parts.join(" · ")}</span>`;
+  };
+
+  document.querySelectorAll(".combined-trend").forEach((chart) => {
+    const dataNode = chart.querySelector(".trend-data");
+    const tooltip = chart.querySelector(".trend-tooltip");
+    if (!dataNode || !tooltip) return;
+    let data;
+    try {
+      data = JSON.parse(dataNode.textContent || "{}");
+    } catch {
+      return;
+    }
+
+    const showMode = (mode) => {
+      chart.querySelectorAll(".combined-svg").forEach((svg) => {
+        svg.hidden = svg.dataset.mode !== mode;
+      });
+      chart.querySelectorAll(".chart-mode-button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.chartMode === mode);
+      });
+    };
+
+    chart.querySelectorAll(".chart-mode-button").forEach((button) => {
+      button.addEventListener("click", () => showMode(button.dataset.chartMode || "indexed"));
+    });
+
+    const showTooltip = (event, year, svg) => {
+      const yearIndex = data.years.indexOf(Number(year));
+      if (yearIndex < 0) return;
+      const rows = data.series.map((series) => {
+        const top = (series.top_by_year || {})[String(year)] || {};
+        const count = Number((series.counts || [])[yearIndex] || 0);
+        return `<div class="trend-tooltip-row">
+          <span class="trend-tooltip-keyword" style="color:${escapeHtml(series.color)}">${escapeHtml(series.concept)}</span>:
+          <strong>${count}</strong> candidate appearances
+          <div>${formatTopWork(top)}</div>
+        </div>`;
+      }).join("");
+      tooltip.innerHTML = `<div class="trend-tooltip-title">${escapeHtml(year)}</div>${rows}`;
+      tooltip.style.display = "block";
+      const chartRect = chart.getBoundingClientRect();
+      const tooltipWidth = Math.min(460, chartRect.width - 40);
+      const left = Math.min(
+        Math.max(event.clientX - chartRect.left + 14, 12),
+        chartRect.width - tooltipWidth - 12
+      );
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${Math.max(event.clientY - chartRect.top - 12, 70)}px`;
+      const line = svg.querySelector(".trend-hover-line");
+      const zone = event.currentTarget;
+      if (line && zone) {
+        const x = Number(zone.getAttribute("x")) + Number(zone.getAttribute("width")) / 2;
+        line.setAttribute("x1", x);
+        line.setAttribute("x2", x);
+        line.style.display = "block";
+      }
+    };
+
+    chart.querySelectorAll(".trend-hover-zone").forEach((zone) => {
+      zone.addEventListener("mousemove", (event) => {
+        const svg = zone.closest("svg");
+        showTooltip(event, zone.dataset.year, svg);
+      });
+      zone.addEventListener("mouseenter", (event) => {
+        const svg = zone.closest("svg");
+        showTooltip(event, zone.dataset.year, svg);
+      });
+    });
+
+    chart.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+      chart.querySelectorAll(".trend-hover-line").forEach((line) => {
+        line.style.display = "none";
+      });
+    });
+
+    showMode("indexed");
+  });
+})();
+</script>
+"""
+
 
 def repair_mojibake(text: str) -> str:
     replacements = {
@@ -536,6 +736,21 @@ def parse_field_table(lines: list[str], start_index: int) -> tuple[list[tuple[st
             fields.append((cells[0], cells[1]))
         index += 1
     return fields, index
+
+
+def render_generic_table(table_lines: list[str]) -> str:
+    rows = []
+    for index, line in enumerate(table_lines):
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if index == 1 and all(re.fullmatch(r":?-+:?", cell) for cell in cells):
+            continue
+        tag = "th" if index == 0 else "td"
+        rows.append(
+            "<tr>"
+            + "".join(f"<{tag}>{inline_markdown(cell)}</{tag}>" for cell in cells)
+            + "</tr>"
+        )
+    return '<table class="summary-table">' + "\n".join(rows) + "</table>"
 
 
 def render_fields(fields: list[tuple[str, str]]) -> str:
@@ -641,8 +856,23 @@ def points_for_series(item: dict, years: list[int]) -> list[int]:
     return [by_year.get(year, 0) for year in years]
 
 
+def top_work_by_year(item: dict) -> dict[int, dict]:
+    values = {}
+    for point in item.get("points", []):
+        if isinstance(point, dict) and isinstance(point.get("year"), int):
+            values[int(point["year"])] = point.get("top_cited_work") or {}
+    return values
+
+
+def normalized_points(counts: list[int]) -> list[float]:
+    peak = max(counts, default=0)
+    if peak <= 0:
+        return [0 for _ in counts]
+    return [(count / peak) * 100 for count in counts]
+
+
 def chart_coordinates(
-    counts: list[int],
+    counts: list[int] | list[float],
     years: list[int],
     width: int,
     height: int,
@@ -704,40 +934,91 @@ def render_combined_chart(data: dict, years: list[int]) -> str:
     width = 900
     height = 290
     padding = 44
-    counts_by_series = [points_for_series(item, years) for item in series]
-    max_y = max([max(counts, default=0) for counts in counts_by_series] or [1])
-    baseline = height - padding
-    chart_lines = [
-        f'<line x1="{padding}" y1="{baseline}" x2="{width - padding}" y2="{baseline}" stroke="#d9e0ea" stroke-width="1"/>',
-        f'<text class="trend-axis" x="{padding}" y="{height - 14}">{years[0]}</text>',
-        f'<text class="trend-axis" x="{width - padding}" y="{height - 14}" text-anchor="end">{years[-1]}</text>',
-        f'<text class="trend-axis" x="{padding}" y="{padding - 14}">{max_y}</text>',
-    ]
+    raw_counts_by_series = [points_for_series(item, years) for item in series]
+
+    def chart_svg(mode: str, max_y: int, counts_by_series: list[list[int] | list[float]]) -> str:
+        baseline = height - padding
+        chart_lines = [
+            f'<line x1="{padding}" y1="{baseline}" x2="{width - padding}" y2="{baseline}" stroke="#d9e0ea" stroke-width="1"/>',
+            f'<text class="trend-axis" x="{padding}" y="{height - 14}">{years[0]}</text>',
+            f'<text class="trend-axis" x="{width - padding}" y="{height - 14}" text-anchor="end">{years[-1]}</text>',
+            f'<text class="trend-axis" x="{padding}" y="{padding - 14}">{max_y}</text>',
+        ]
+        for index, item in enumerate(series):
+            color = CHART_COLORS[index % len(CHART_COLORS)]
+            coordinates = chart_coordinates(counts_by_series[index], years, width, height, padding, max_y)
+            if not coordinates:
+                continue
+            chart_lines.append(
+                f'<polyline points="{points_attr(coordinates)}" fill="none" stroke="{color}" '
+                'stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
+            )
+        hover_coordinates = chart_coordinates([0 for _ in years], years, width, height, padding, max_y)
+        if hover_coordinates:
+            chart_lines.append(
+                f'<line class="trend-hover-line" x1="{hover_coordinates[0][0]:.1f}" y1="{padding}" '
+                f'x2="{hover_coordinates[0][0]:.1f}" y2="{baseline}"/>'
+            )
+            zone_width = max((width - padding * 2) / max(len(years), 1), 8)
+            for year, (x, _) in zip(years, hover_coordinates):
+                chart_lines.append(
+                    f'<rect class="trend-hover-zone" data-year="{year}" '
+                    f'x="{x - zone_width / 2:.1f}" y="{padding}" '
+                    f'width="{zone_width:.1f}" height="{baseline - padding}"/>'
+                )
+        return (
+            f'<svg class="trend-svg combined-svg" data-mode="{mode}" '
+            f'viewBox="0 0 {width} {height}" role="img" '
+            f'aria-label="Combined keyword yearly trend, {mode} mode">'
+            + "\n".join(chart_lines)
+            + "</svg>"
+        )
+
+    raw_max_y = max([max(counts, default=0) for counts in raw_counts_by_series] or [1])
+    indexed_counts_by_series = [normalized_points(counts) for counts in raw_counts_by_series]
     legend = []
     for index, item in enumerate(series):
         color = CHART_COLORS[index % len(CHART_COLORS)]
-        coordinates = chart_coordinates(counts_by_series[index], years, width, height, padding, max_y)
-        if not coordinates:
-            continue
-        chart_lines.append(
-            f'<polyline points="{points_attr(coordinates)}" fill="none" stroke="{color}" '
-            'stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>'
-        )
         legend.append(
             '<span class="trend-legend-item">'
             f'<span class="trend-swatch" style="--trend-color:{color}"></span>'
             f"{html.escape(str(item.get('concept', 'Keyword')))}"
             "</span>"
         )
+    payload = {
+        "years": years,
+        "series": [
+            {
+                "concept": str(item.get("concept", "Keyword")),
+                "color": CHART_COLORS[index % len(CHART_COLORS)],
+                "counts": raw_counts_by_series[index],
+                "top_by_year": top_work_by_year(item),
+            }
+            for index, item in enumerate(series)
+        ],
+    }
+    payload_json = (
+        json.dumps(payload, ensure_ascii=False)
+        .replace("&", "\\u0026")
+        .replace("<", "\\u003c")
+        .replace(">", "\\u003e")
+    )
     return (
         '<div class="combined-trend">'
+        '<div class="combined-trend-header">'
         "<h3>Combined Keyword Trajectories</h3>"
-        f'<svg class="trend-svg" viewBox="0 0 {width} {height}" role="img" aria-label="Combined keyword yearly trend">'
-        + "\n".join(chart_lines)
-        + "</svg>"
+        '<div class="chart-mode-toggle" role="group" aria-label="Chart scale mode">'
+        '<button class="chart-mode-button active" type="button" data-chart-mode="indexed">% of keyword peak</button>'
+        '<button class="chart-mode-button" type="button" data-chart-mode="raw">Raw counts</button>'
+        "</div></div>"
+        + chart_svg("indexed", 100, indexed_counts_by_series)
+        + chart_svg("raw", raw_max_y, raw_counts_by_series).replace('class="trend-svg combined-svg"', 'class="trend-svg combined-svg" hidden')
         + '<div class="trend-legend">'
         + "\n".join(legend)
-        + "</div></div>"
+        + "</div>"
+        + '<div class="trend-tooltip" role="status"></div>'
+        + f'<script type="application/json" class="trend-data">{payload_json}</script>'
+        + "</div>"
     )
 
 
@@ -765,12 +1046,12 @@ def render_keyword_trends(path: Path) -> str:
             f'<h3 class="trend-title">{html.escape(concept)}</h3>'
             f'<span class="trend-count">{total} candidate appearances</span>'
             "</div>"
-            '<span class="trend-open" aria-hidden="true">↗</span>'
+            '<span class="trend-open" title="Open enlarged chart" aria-hidden="true">&#x26F6;</span>'
             "</div>"
             + chart
             + '<div class="trend-footer">'
             f"<span>Peak: {html.escape(str(peak_year))}</span>"
-            f"<strong>{peak_count} papers</strong>"
+            f"<span>{peak_count} papers</span>"
             "</div></a>"
         )
         modals.append(
@@ -883,6 +1164,18 @@ def markdown_to_html(markdown: str) -> str:
             body.append("\n".join(rows))
             body.append("</div>")
             continue
+        if line.startswith("| "):
+            table_lines = [line]
+            index += 1
+            while index < len(lines) and lines[index].startswith("|"):
+                table_lines.append(lines[index])
+                index += 1
+            body.append(render_generic_table(table_lines))
+            continue
+        if line.strip():
+            paragraph_class = "empty-note" if line.startswith("No matched articles") else ""
+            class_attr = f' class="{paragraph_class}"' if paragraph_class else ""
+            body.append(f"<p{class_attr}>{inline_markdown(line.strip())}</p>")
         index += 1
 
     if in_hero:
@@ -912,6 +1205,7 @@ def render(markdown_path: Path, output_path: Path) -> None:
   <main>
 {html_body}
   </main>
+{REPORT_SCRIPT}
 </body>
 </html>
 """

@@ -14,6 +14,7 @@ The project does not automate institutional login, bypass paywalls, solve CAPTCH
 - CSV record table with stable field order.
 - Standalone HTML report suitable for static hosting.
 - Keyword trajectory charts in the HTML report, backed by `obhrm_keyword_trends.json`.
+  The combined chart supports normalized and raw-count views, plus year-level hover details.
 - Optional short Lark webhook summary containing only concepts, time window, and journal/platform counts.
 
 Per-article report fields are:
@@ -89,6 +90,8 @@ python skills/obhrm-literature-monitor/scripts/run_daily_scan.py --journal-list 
 
 The production search retrieves OpenAlex candidates by source/concept/window, then locally checks title, abstract, and keyword metadata. The CSV/Markdown `matched_fields` column shows which fields matched.
 
+When multiple keyword concepts are supplied, the report's `At a Glance`, `Articles With Abstracts`, and `Missing Abstract` sections are split by keyword concept. Articles that match multiple concepts can appear in multiple concept sections so each reader can browse from their own concept of interest.
+
 Choose one or more source lists when broad keywords would produce too many articles. Repeating `--journal-list` scans the union of those lists:
 
 ```text
@@ -153,7 +156,7 @@ Important permission rule: most users cannot click `Run workflow` inside another
 
 The workflow runs on GitHub-hosted servers. It generates Markdown, CSV, and HTML artifacts, publishes the public HTML copy into `site/reports/<run-folder>/`, commits the updated `site/` directory, and deploys the `site/` directory to GitHub Pages.
 It also uploads `obhrm_scan_trace.csv`, which shows source-by-source traversal details: journal/platform name, OpenAlex source id, concept, API total count, fetched count, pages fetched, status, and query URL.
-It also uploads `obhrm_keyword_trends.json`, which stores the per-keyword yearly counts used by the HTML trajectory charts.
+It also uploads `obhrm_keyword_trends.json`, which stores the per-keyword yearly counts and year-level top-cited candidate metadata used by the HTML trajectory charts.
 Technical OpenAlex controls are intentionally hidden from the normal `Run workflow` form; production web runs use the source-first OpenAlex strategy with exhaustive cursor paging by default.
 
 When `public_site_url` is blank, report links are generated from the running repository's GitHub Pages URL:

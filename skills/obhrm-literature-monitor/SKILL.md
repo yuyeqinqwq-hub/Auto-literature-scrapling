@@ -131,6 +131,7 @@ Reports must include:
 - matched fields
 
 CSV outputs must use the same field order. Do not include fields not listed above in per-article outputs.
+When a scan uses multiple keyword concepts, split the Markdown/HTML `At a Glance`, `Articles With Abstracts`, and `Missing Abstract` presentation by keyword concept while keeping the CSV as one stable record table.
 
 Generate the standalone HTML report from Markdown with:
 
@@ -138,7 +139,7 @@ Generate the standalone HTML report from Markdown with:
 python skills/obhrm-literature-monitor/scripts/render_report_html.py --input outputs/<run-folder>/obhrm_daily_report.md
 ```
 
-When `obhrm_keyword_trends.json` exists beside the Markdown report, the HTML renderer adds a `Keyword Trajectories` section with clickable per-keyword SVG charts and a combined multi-line chart. The trend charts show per-keyword yearly candidate counts within the selected sources/window; final article inclusion is still controlled by `match_mode`.
+When `obhrm_keyword_trends.json` exists beside the Markdown report, the HTML renderer adds a `Keyword Trajectories` section with clickable per-keyword SVG charts and a combined multi-line chart. The combined chart defaults to a normalized `% of keyword peak` view so low-frequency keywords remain legible, and also provides a raw-count view. Hover details use raw yearly counts and the top-cited OpenAlex candidate for that keyword/year. The trend charts show per-keyword yearly candidate counts within the selected sources/window; final article inclusion is still controlled by `match_mode`.
 
 Publish the HTML report into the Netlify static site directory with:
 
@@ -168,7 +169,7 @@ GitHub only shows `Run workflow` to users with sufficient permission on that rep
 The workflow runs `scripts/run_github_report.py`, which scans, renders standalone HTML, publishes the public copy under `site/reports/<run-folder>/`, uploads Markdown/HTML/CSV/log artifacts to the workflow run, commits `site/`, and deploys `site/` to GitHub Pages. If `public_site_url` is left blank in the workflow form, the workflow computes the fork's default GitHub Pages URL: `https://<github-user>.github.io/<repo-name>/`.
 
 The workflow also uploads `obhrm_scan_trace.csv`. Use this file to audit the traversal process: it records each source, source id, concept, API total count, fetched count, page count, status, and query URL.
-The workflow also uploads `obhrm_keyword_trends.json`, which stores the yearly keyword counts used by the HTML chart section.
+The workflow also uploads `obhrm_keyword_trends.json`, which stores the yearly keyword counts and top-cited candidate metadata used by the HTML chart section.
 
 Repository secrets for Lark push:
 

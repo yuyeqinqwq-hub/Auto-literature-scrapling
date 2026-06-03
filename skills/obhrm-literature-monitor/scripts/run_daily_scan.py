@@ -759,6 +759,25 @@ def openalex_work_key(work: dict[str, Any]) -> str:
     return str(work.get("doi") or work.get("id") or work.get("display_name") or "").strip().lower()
 
 
+def openalex_work_source_name(work: dict[str, Any]) -> str:
+    primary_location = work.get("primary_location") or {}
+    source = primary_location.get("source") or {}
+    return str(source.get("display_name") or "").strip()
+
+
+def openalex_top_work_info(work: dict[str, Any]) -> dict[str, Any]:
+    doi = str(work.get("doi") or "").strip()
+    doi_url = doi if doi.startswith("https://doi.org/") else f"https://doi.org/{doi}" if doi else ""
+    return {
+        "title": str(work.get("display_name") or "").strip(),
+        "journal": openalex_work_source_name(work),
+        "publication_date": str(work.get("publication_date") or "").strip(),
+        "doi_url": doi_url,
+        "openalex_url": str(work.get("id") or "").strip(),
+        "cited_by_count": int(work.get("cited_by_count") or 0),
+    }
+
+
 def openalex_work_year(work: dict[str, Any]) -> str:
     year = work.get("publication_year")
     if isinstance(year, int):
@@ -770,7 +789,7 @@ def openalex_work_year(work: dict[str, Any]) -> str:
 
 
 def record_keyword_trends(
-    trend_counts: dict[str, dict[str, set[str]]],
+    trend_counts: dict[str, dict[str, dict[str, Any]]],
     concept: str,
     works: list[dict[str, Any]],
 ) -> None:
@@ -780,11 +799,16 @@ def record_keyword_trends(
         key = openalex_work_key(work)
         if not year or not key:
             continue
-        concept_counts.setdefault(year, set()).add(key)
+        bucket = concept_counts.setdefault(year, {"keys": set(), "top_cited_work": {}})
+        bucket["keys"].add(key)
+        candidate = openalex_top_work_info(work)
+        current = bucket.get("top_cited_work") or {}
+        if candidate["cited_by_count"] >= int(current.get("cited_by_count") or -1):
+            bucket["top_cited_work"] = candidate
 
 
 def record_article_trends(
-    trend_counts: dict[str, dict[str, set[str]]],
+    trend_counts: dict[str, dict[str, dict[str, Any]]],
     concepts: list[str],
     articles: list[Article],
 ) -> None:
@@ -795,7 +819,20 @@ def record_article_trends(
         key = article.doi or f"{article.title.lower()}::{article.journal.lower()}"
         for concept in concepts:
             if concept in article.matched_concepts:
-                trend_counts.setdefault(concept, {}).setdefault(year, set()).add(key)
+                bucket = trend_counts.setdefault(concept, {}).setdefault(
+                    year,
+                    {"keys": set(), "top_cited_work": {}},
+                )
+                bucket["keys"].add(key)
+                if not bucket.get("top_cited_work"):
+                    bucket["top_cited_work"] = {
+                        "title": article.title,
+                        "journal": article.journal,
+                        "publication_date": article.publication_date,
+                        "doi_url": article.doi_url,
+                        "openalex_url": article.openalex_url,
+                        "cited_by_count": 0,
+                    }
 
 
 def query_crossref_journal(
@@ -1043,7 +1080,7 @@ def scan_articles_keyword_first(
     per_keyword: int,
     max_pages: int,
     log: list[str],
-    trend_counts: dict[str, dict[str, set[str]]] | None = None,
+    trend_counts: dict[str, dict[str, dict[str, Any]]] | None = None,
 ) -> list[Article]:
     whitelist_issns, whitelist_titles = journal_index(journals)
     raw_works: list[dict[str, Any]] = []
@@ -1086,7 +1123,7 @@ def scan_articles_source_first(
     limit_journals: int | None,
     log: list[str],
     trace_rows: list[dict[str, Any]],
-    trend_counts: dict[str, dict[str, set[str]]] | None = None,
+    trend_counts: dict[str, dict[str, dict[str, Any]]] | None = None,
 ) -> list[Article]:
     selected_journals = journals[:limit_journals] if limit_journals else journals
     raw_works: list[dict[str, Any]] = []
@@ -1236,7 +1273,7 @@ def write_trace_report(trace_rows: list[dict[str, Any]], path: Path) -> None:
 
 def serialize_keyword_trends(
     concepts: list[str],
-    trend_counts: dict[str, dict[str, set[str]]],
+    trend_counts: dict[str, dict[str, dict[str, Any]]],
 ) -> dict[str, Any]:
     all_years: set[int] = set()
     series: list[dict[str, Any]] = []
@@ -1248,10 +1285,16 @@ def serialize_keyword_trends(
             if not year_text.isdigit():
                 continue
             year = int(year_text)
-            count = len(keys)
+            count = len(keys.get("keys", set()))
             total += count
             all_years.add(year)
-            points.append({"year": year, "count": count})
+            points.append(
+                {
+                    "year": year,
+                    "count": count,
+                    "top_cited_work": keys.get("top_cited_work") or {},
+                }
+            )
         peak = max(points, key=lambda item: item["count"], default={"year": "", "count": 0})
         series.append(
             {
@@ -1271,7 +1314,7 @@ def serialize_keyword_trends(
 
 def write_keyword_trends(
     concepts: list[str],
-    trend_counts: dict[str, dict[str, set[str]]],
+    trend_counts: dict[str, dict[str, dict[str, Any]]],
     path: Path,
 ) -> None:
     path.write_text(
@@ -1306,6 +1349,43 @@ def article_markdown(article: Article, index: int) -> str:
 """
 
 
+def articles_for_concept(articles: list[Article], concept: str) -> list[Article]:
+    return [article for article in articles if concept in article.matched_concepts]
+
+
+def keyword_breakdown_table(articles: list[Article], concepts: list[str]) -> list[str]:
+    rows = [
+        "| Keyword | Matched articles | Articles with abstracts | Missing abstracts |",
+        "|---|---:|---:|---:|",
+    ]
+    for concept in concepts:
+        matched = articles_for_concept(articles, concept)
+        available_count = sum(1 for article in matched if article.abstract_status != "missing")
+        missing_count = len(matched) - available_count
+        rows.append(f"| {concept} | {len(matched)} | {available_count} | {missing_count} |")
+    return rows
+
+
+def append_keyword_article_sections(
+    body: list[str],
+    heading_prefix: str,
+    articles: list[Article],
+    concepts: list[str],
+    require_abstract: bool,
+) -> None:
+    for concept in concepts:
+        grouped = [
+            article
+            for article in articles_for_concept(articles, concept)
+            if (article.abstract_status != "missing") == require_abstract
+        ]
+        body.extend(["", f"## {heading_prefix} - {concept}", ""])
+        if grouped:
+            body.extend(article_markdown(article, index) for index, article in enumerate(grouped, 1))
+        else:
+            body.append(f"No matched articles in this category for {concept}.")
+
+
 def write_markdown_report(
     articles: list[Article],
     path: Path,
@@ -1335,12 +1415,7 @@ def write_markdown_report(
         "",
         "## At a Glance",
         "",
-        "| Metric | Count |",
-        "|---|---:|",
-        f"| Matched articles | {len(articles)} |",
-        f"| Articles with abstracts | {with_abstract_count} |",
-        f"| Missing abstracts | {len(missing)} |",
-        f"| Target sources | {journal_count} |",
+        *keyword_breakdown_table(articles, concepts),
         "",
         "> Publication metadata often has date-level rather than hour-level precision. "
         "This report uses the requested local timezone window and public metadata API date filters.",
@@ -1349,15 +1424,30 @@ def write_markdown_report(
         "Readers must manually use their own authorized university account for full-text access. "
         "The monitor does not log in, bypass access controls, or download PDFs.",
         "",
-        "## Articles With Abstracts",
-        "",
     ]
-    body.extend(article_markdown(article, index) for index, article in enumerate(available, 1))
-    body.extend(["", "## Missing Abstract", ""])
-    if missing:
-        body.extend(article_markdown(article, index) for index, article in enumerate(missing, 1))
+    if len(concepts) == 1:
+        body.extend(["## Articles With Abstracts", ""])
+        body.extend(article_markdown(article, index) for index, article in enumerate(available, 1))
+        body.extend(["", "## Missing Abstract", ""])
+        if missing:
+            body.extend(article_markdown(article, index) for index, article in enumerate(missing, 1))
+        else:
+            body.append("No matched articles with missing abstracts.")
     else:
-        body.append("No matched articles with missing abstracts.")
+        append_keyword_article_sections(
+            body,
+            heading_prefix="Articles With Abstracts",
+            articles=articles,
+            concepts=concepts,
+            require_abstract=True,
+        )
+        append_keyword_article_sections(
+            body,
+            heading_prefix="Missing Abstract",
+            articles=articles,
+            concepts=concepts,
+            require_abstract=False,
+        )
     path.write_text("\n".join(body), encoding="utf-8")
 
 
@@ -1514,7 +1604,7 @@ def main() -> int:
     trend_path = output_dir / "obhrm_keyword_trends.json"
     log_path = log_dir / "run.log"
     trace_rows: list[dict[str, Any]] = []
-    trend_counts: dict[str, dict[str, set[str]]] = {}
+    trend_counts: dict[str, dict[str, dict[str, Any]]] = {}
     log: list[str] = [
         f"Start: {datetime.now().isoformat(timespec='seconds')}",
         f"Window: {start.isoformat()} to {end.isoformat()}",
