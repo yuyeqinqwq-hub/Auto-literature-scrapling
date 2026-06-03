@@ -14,7 +14,7 @@ The project does not automate institutional login, bypass paywalls, solve CAPTCH
 - CSV record table with stable field order.
 - Standalone HTML report suitable for static hosting.
 - Keyword trajectory charts in the HTML report, backed by `obhrm_keyword_trends.json`.
-  The combined chart supports normalized and raw-count views, plus year-level hover details.
+  The combined chart supports `% of keyword peak` and `Raw counts` views, plus year-level hover details.
 - Optional short Lark webhook summary containing only concepts, time window, and journal/platform counts.
 
 Per-article report fields are:
