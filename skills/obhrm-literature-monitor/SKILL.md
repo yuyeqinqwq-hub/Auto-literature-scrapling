@@ -13,7 +13,7 @@ description: Monitor OBHRM/HCI/preprint target-source articles, build and review
 - Support `Asia/Tokyo`, `America/Chicago`, and `Asia/Shanghai` for user-entered windows. The weekly production window is previous Monday 00:00 inclusive to current Monday 00:00 exclusive in the selected timezone.
 - Keep keywords easy to replace through `config/monitor.yaml`, command-line arguments, or GitHub Actions keyword fields.
 - Treat quoted multi-word inputs such as `"Business History"` as ordered phrases by stripping only the outer quotes before matching. Do not imply full Web of Science query-builder support unless it is explicitly implemented.
-- For team self-service runs, prefer the GitHub Actions manual workflow over asking every teacher/student to install Codex locally.
+- For team self-service runs, prefer the GitHub Actions manual workflow over asking every teacher/student to install Codex locally. The preferred deployment model is a central GitHub Organization repository where members have the minimum repository role needed to run workflow_dispatch jobs; fork-based runs are only a fallback when central access is not available.
 
 ## Compliance Boundary
 
@@ -152,7 +152,7 @@ The public site copy removes email addresses found in article metadata while lea
 
 ## GitHub Web UI Workflow
 
-Use `.github/workflows/generate-literature-report.yml` when a collaborator needs to generate a report without local Codex or Python setup. The workflow exposes a GitHub `Run workflow` form with:
+Use `.github/workflows/generate-literature-report.yml` when a collaborator needs to generate a report without local Codex or Python setup. For group use, prefer running this workflow in one central GitHub Organization repository so all reports appear on the same GitHub Pages index and each entry can show the triggering GitHub account. Forks remain a fallback for users who cannot be added to the organization repository. The workflow exposes a GitHub `Run workflow` form with:
 
 - `keyword_1` to `keyword_5`: up to five concepts, one per field; blank fields are ignored.
 - `timezone`: one of `Asia/Tokyo`, `America/Chicago`, or `Asia/Shanghai`.
@@ -164,9 +164,9 @@ Use `.github/workflows/generate-literature-report.yml` when a collaborator needs
 
 The web workflow intentionally hides low-level OpenAlex controls from ordinary users. It uses the production `openalex-source` traversal with repository defaults.
 
-GitHub only shows `Run workflow` to users with sufficient permission on that repository. For teacher/student self-service, direct them to fork the repository and run the workflow in their fork.
+GitHub only shows `Run workflow` to users with sufficient permission on that repository. For central Organization use, add teachers/students to an organization team and grant that team at least `Write` access to the repository so they can run manual workflows. Configure `Settings` -> `Pages` -> `Build and deployment` -> `Source` as `GitHub Actions` once in the central repository, preferably by an admin/maintainer. For users who cannot receive central access, direct them to fork the repository and run the workflow in their fork.
 
-The workflow runs `scripts/run_github_report.py`, which scans, renders standalone HTML, publishes the public copy under `site/reports/<run-folder>/`, uploads Markdown/HTML/CSV/log artifacts to the workflow run, commits `site/`, and deploys `site/` to GitHub Pages. If `public_site_url` is left blank in the workflow form, the workflow computes the fork's default GitHub Pages URL: `https://<github-user>.github.io/<repo-name>/`.
+The workflow runs `scripts/run_github_report.py`, which scans, renders standalone HTML, publishes the public copy under `site/reports/<run-folder>/`, uploads Markdown/HTML/CSV/log artifacts to the workflow run, commits `site/`, and deploys `site/` to GitHub Pages. If `public_site_url` is left blank in the workflow form, the workflow computes the running repository's default GitHub Pages URL: `https://<owner-or-org>.github.io/<repo-name>/`.
 
 The workflow also uploads `obhrm_scan_trace.csv`. Use this file to audit the traversal process: it records each source, source id, concept, API total count, fetched count, page count, status, and query URL.
 The workflow also uploads `obhrm_keyword_trends.json`, which stores the yearly keyword counts and top-cited candidate metadata used by the HTML chart section.

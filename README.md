@@ -138,13 +138,23 @@ Collaborators do not need Codex, Python, or this repository on their own compute
 
 For a step-by-step beginner guide, see `docs/OBHRM_Literature_Monitor_GitHub_Actions_User_Guide.md`.
 
-Important permission rule: most users cannot click `Run workflow` inside another person's repository unless they have sufficient write/collaborator access. For ordinary teacher/student self-service use, fork this repository first and run Actions inside the fork. The workflow publishes that fork's reports to that fork's GitHub Pages site.
+Recommended group setup: create a GitHub Organization, host one central copy of this repository there, invite teachers/students to the organization, add them to a team such as `literature-monitor-users`, and grant that team at least `Write` access to the central repository. GitHub repository roles with `Write` access can run manual Actions workflows; `Read` or `Triage` is usually not enough for `Run workflow`.
 
-1. Fork this GitHub repository into your own GitHub account.
-2. Click `Actions`.
-3. Choose `Generate OBHRM Literature Report`.
-4. Click `Run workflow`.
-5. Fill in:
+An admin or maintainer should configure the central repository once:
+
+1. Open the organization repository.
+2. Click `Settings` -> `Pages`.
+3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
+4. Add Lark repository secrets if needed:
+   - `OBHRM_LARK_WEBHOOK_URL`
+   - `OBHRM_LARK_WEBHOOK_SECRET`
+
+After that, members run reports directly in the central repository:
+
+1. Click `Actions`.
+2. Choose `Generate OBHRM Literature Report`.
+3. Click `Run workflow`.
+4. Fill in:
    - `keyword_1` to `keyword_5`: enter up to five concepts, one per field. Leave unused fields blank.
    - `timezone`: choose `Asia/Tokyo`, `America/Chicago`, or `Asia/Shanghai`.
    - `start_date` and `start_clock`: inclusive start date and time, such as `2026/05/18` and `00:00`.
@@ -152,9 +162,9 @@ Important permission rule: most users cannot click `Run workflow` inside another
    - `match_mode`: choose `any` for OR logic, or `all` for AND logic.
    - Journal list checkboxes: select one or more of `all-whitelist`, `abs-4-and-4-star`, `abs-4-star`, `ft50`, and `utd24`. The workflow scans the union of all selected lists. `abs-4-star` is selected by default as the most selective option.
    - `public_site_url`: leave blank unless you maintain a custom Netlify or GitHub Pages domain.
-6. Start the workflow and wait for it to finish.
+5. Start the workflow and wait for it to finish.
 
-The workflow runs on GitHub-hosted servers. It generates Markdown, CSV, and HTML artifacts, publishes the public HTML copy into `site/reports/<run-folder>/`, commits the updated `site/` directory, and deploys the `site/` directory to GitHub Pages.
+The workflow runs on GitHub-hosted servers. It generates Markdown, CSV, and HTML artifacts, publishes the public HTML copy into `site/reports/<run-folder>/`, commits the updated `site/` directory, and deploys the `site/` directory to GitHub Pages. The public index page aggregates all central-repository reports and shows the GitHub account and run timestamp for each new report.
 It also uploads `obhrm_scan_trace.csv`, which shows source-by-source traversal details: journal/platform name, OpenAlex source id, concept, API total count, fetched count, pages fetched, status, and query URL.
 It also uploads `obhrm_keyword_trends.json`, which stores the per-keyword yearly counts and year-level top-cited candidate metadata used by the HTML trajectory charts.
 Technical OpenAlex controls are intentionally hidden from the normal `Run workflow` form; production web runs use the source-first OpenAlex strategy with exhaustive cursor paging by default.
@@ -162,11 +172,11 @@ Technical OpenAlex controls are intentionally hidden from the normal `Run workfl
 When `public_site_url` is blank, report links are generated from the running repository's GitHub Pages URL:
 
 ```text
-https://<github-user>.github.io/<repo-name>/
-https://<github-user>.github.io/<repo-name>/reports/<run-folder>/
+https://<owner-or-org>.github.io/<repo-name>/
+https://<owner-or-org>.github.io/<repo-name>/reports/<run-folder>/
 ```
 
-If GitHub asks for a Pages source, choose `GitHub Actions` in `Settings` -> `Pages`. The workflow uses GitHub Pages deployment actions, so forks do not need the original Netlify project.
+Forks are still supported as a fallback when a user cannot be added to the organization repository. In that case, the user must configure `Settings` -> `Pages` -> `Source` -> `GitHub Actions` in their own fork, and their reports will publish to that fork's Pages site rather than the central index.
 
 If Lark secrets are configured, the workflow also sends the short Lark summary. Add these repository secrets under GitHub `Settings` -> `Secrets and variables` -> `Actions`:
 
