@@ -1,33 +1,33 @@
 # OBHRM Literature Monitor GitHub Actions User Guide
 
-本指南面向第一次使用本项目的老师和同学。推荐使用方式已经从“每个人 fork 一份仓库”升级为“所有成员加入同一个 GitHub Organization，在中央仓库中运行同一个 workflow”。这样大家生成的报告会统一出现在同一个 Public index 页面中，并且每条记录右侧会显示运行者 GitHub 账号和运行时间。
+本指南面向第一次使用本项目的老师和同学。推荐使用方式已经调整为“中央个人仓库 + collaborators”：项目负责人保留一个中央仓库，老师和同学被邀请为该仓库 collaborators，然后大家都在同一个仓库中运行同一个 workflow。这样大家生成的报告会统一出现在同一个 Public index 页面中，并且每条记录右侧会显示运行者 GitHub 账号和运行时间。
 
-你不需要安装 Codex，不需要安装 Python，也不需要在自己的电脑上配置运行环境。只要有 GitHub 账号，并且被加入组织仓库且拥有必要权限，就可以在网页中输入关键词、时间窗口和期刊范围，自动生成 HTML literature report，并下载 CSV 格式的文献列表。
+你不需要安装 Codex，不需要安装 Python，也不需要在自己的电脑上配置运行环境。只要有 GitHub 账号，并且被项目负责人加入中央仓库 collaborators，就可以在网页中输入关键词、时间窗口和期刊范围，自动生成 HTML literature report，并下载 CSV 格式的文献列表。
 
-## 1. 推荐协作模式：中央 Organization 仓库
+## 1. 推荐协作模式：中央仓库 collaborators
 
-### 1.1 管理员需要先做什么
+### 1.1 项目负责人需要先做什么
 
-项目负责人或管理员需要先完成一次性设置：
+项目负责人需要先完成一次性设置：
 
-1. 新建一个 GitHub Organization。
-2. 将本项目仓库迁移或复制到该 Organization 下。
-3. 邀请老师和同学加入 Organization。
-4. 创建一个团队，例如 `literature-monitor-users`。
-5. 将需要运行报告的成员加入该团队。
-6. 给该团队授予中央仓库的 `Write` 权限。
+1. 保留一个中央仓库，例如 `qlq20011120/Auto-literature-scrapling`。
+2. 收集老师和同学的 GitHub username 或 GitHub 邮箱。
+3. 进入中央仓库 `Settings` -> `Collaborators and teams`。
+4. 点击 `Add people`，邀请老师和同学成为 collaborators。
+5. 给需要运行 workflow 的 collaborators 授予可以运行 GitHub Actions 的权限。通常选择 `Write` 权限最稳妥。
+6. 等待对方接受 GitHub invitation。
 7. 进入中央仓库 `Settings` -> `Pages`，将 `Build and deployment` -> `Source` 设置为 `GitHub Actions`。
-8. 如需 Lark 推送，由管理员在中央仓库配置 repository secrets：`OBHRM_LARK_WEBHOOK_URL` 和可选的 `OBHRM_LARK_WEBHOOK_SECRET`。
+8. 如需 Lark 推送，由项目负责人在中央仓库配置 repository secrets：`OBHRM_LARK_WEBHOOK_URL` 和可选的 `OBHRM_LARK_WEBHOOK_SECRET`。
 
-为什么需要 `Write` 权限：GitHub 的组织仓库角色中，运行、重跑和取消 GitHub Actions workflow 通常需要 `Write` 及以上权限。只给 `Read` 或 `Triage` 时，成员通常只能查看 workflow，不能点击 `Run workflow`。
+为什么选择 collaborator 方案：它不需要创建和维护 GitHub Organization，所有成员仍然能在同一个中央仓库中运行 workflow，并共享同一个报告索引页。
 
-为什么 Pages 只需要管理员设置一次：GitHub Pages 的发布源通常需要有 `Admin` 或 `Maintain` 权限的人配置。设置好以后，普通成员只要能运行 workflow，就可以生成报告并让 workflow 自动部署到同一个 Pages 站点。
+权限提醒：GitHub 个人仓库 collaborators 的权限粒度不如 Organization team 细。为了让老师同学能点击 `Run workflow`，通常需要给他们足够的写入/协作权限。因为我们的 workflow 会自动提交 `site/` 中的新报告记录，所以 collaborators 能运行 workflow 也意味着他们对中央仓库具有一定写权限。建议只邀请可信成员，并定期检查 collaborator 列表。
 
 ### 1.2 普通成员需要做什么
 
-普通老师和同学不需要 fork 仓库。被邀请加入 Organization 并获得中央仓库权限后，直接：
+普通老师和同学不需要 fork 仓库。接受 collaborator 邀请后，直接：
 
-1. 打开中央 Organization 下的项目仓库。
+1. 打开中央仓库，例如 `https://github.com/qlq20011120/Auto-literature-scrapling`。
 2. 点击顶部 `Actions`。
 3. 选择 `Generate OBHRM Literature Report`。
 4. 点击 `Run workflow`。
@@ -60,7 +60,7 @@
 
 ## 3. 如何运行一次文献抓取
 
-1. 进入中央 Organization 仓库。
+1. 进入中央仓库。
 2. 点击顶部 `Actions`。
 3. 在左侧选择 `Generate OBHRM Literature Report`。
 4. 点击右侧或上方的 `Run workflow`。
@@ -70,7 +70,7 @@
 
 GitHub Actions 的进度条是 GitHub 自带功能，不是本项目额外做出的界面。每个步骤成功后会变成绿色。如果某一步失败，页面会显示红色叉号，并可以点进失败步骤查看 log。
 
-如果看不到 `Run workflow`，通常说明你没有中央仓库的 `Write` 及以上权限，或者还没有被正确加入 Organization/team。请联系项目管理员。
+如果看不到 `Run workflow`，通常说明你还没有接受 collaborator 邀请，或者权限不足。请联系项目负责人。
 
 ## 4. Run workflow 表单填写说明
 
@@ -218,15 +218,21 @@ business-history-asia
 
 ### 4.10 Public site URL
 
-在中央 Organization 仓库中，通常应留空。
+在中央仓库中，通常应留空。
 
 留空时，系统会自动使用中央仓库的 GitHub Pages 地址：
 
 ```text
-https://<organization-name>.github.io/<repo-name>/
+https://<owner>.github.io/<repo-name>/
 ```
 
-只有当管理员维护 Netlify 或自定义域名时，才需要填写这一项。
+对当前中央仓库来说，通常会是：
+
+```text
+https://qlq20011120.github.io/Auto-literature-scrapling/
+```
+
+只有当项目负责人维护 Netlify 或自定义域名时，才需要填写这一项。
 
 ### 4.11 Push Lark
 
@@ -250,8 +256,8 @@ workflow 完成后，有三种查看方式。
 打开刚刚完成的 workflow run，在页面中的 summary 里查找：
 
 ```text
-Public report: https://<organization-name>.github.io/<repo-name>/reports/<run-folder>/
-Public index: https://<organization-name>.github.io/<repo-name>/
+Public report: https://<owner>.github.io/<repo-name>/reports/<run-folder>/
+Public index: https://<owner>.github.io/<repo-name>/
 ```
 
 点击 `Public report` 可以查看本次 HTML 报告。
@@ -365,7 +371,7 @@ Public index: https://<organization-name>.github.io/<repo-name>/
 
 ## 9. Fork 备选方案
 
-中央 Organization 仓库是推荐方案，因为它能让所有人共享同一个报告索引页。如果暂时无法把成员加入 Organization，仍然可以使用 fork 备选方案：
+中央仓库 collaborator 方案是推荐方案，因为它能让所有人共享同一个报告索引页。如果暂时无法把成员加入中央仓库，仍然可以使用 fork 备选方案：
 
 1. 每个人 fork 一份仓库到自己的 GitHub 账号。
 2. 在自己的 fork 中进入 `Settings` -> `Pages`。
@@ -378,12 +384,12 @@ Public index: https://<organization-name>.github.io/<repo-name>/
 
 ### 10.1 为什么我看不到 Run workflow
 
-在中央 Organization 模式下，通常是权限不足。请确认：
+在中央仓库 collaborator 模式下，通常是权限或邀请状态问题。请确认：
 
-- 你已经接受 Organization 邀请；
-- 你已经被加入有仓库权限的 team；
-- 该 team 对中央仓库至少有 `Write` 权限；
-- 你打开的是中央 Organization 仓库，而不是原作者个人页或没有权限的镜像仓库。
+- 你已经接受 GitHub collaborator 邀请；
+- 你打开的是中央仓库，而不是自己的 fork 或别人的镜像仓库；
+- 项目负责人给了你足够运行 workflow 的权限，通常需要 `Write`；
+- 仓库的 Actions 功能没有被关闭。
 
 ### 10.2 为什么 Public report 打开是 404
 
@@ -471,15 +477,17 @@ journal lists: abs-4-star + ft50 + utd24
 ## 12. 最简流程回顾
 
 ```text
-管理员新建 GitHub Organization
+项目负责人保留一个中央 GitHub 仓库
   ↓
-将项目仓库迁移或复制到 Organization
+进入 Settings -> Collaborators and teams
   ↓
-邀请老师同学加入 Organization，并加入 team
+Add people，邀请老师同学成为 collaborators
   ↓
-给 team 授予中央仓库 Write 权限
+给需要运行 workflow 的 collaborators 授予 Write 权限
   ↓
-管理员设置中央仓库 Pages Source 为 GitHub Actions
+项目负责人设置 Pages Source 为 GitHub Actions
+  ↓
+成员接受 collaborator 邀请
   ↓
 成员进入中央仓库 Actions
   ↓

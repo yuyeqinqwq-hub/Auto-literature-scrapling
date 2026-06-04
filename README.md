@@ -138,14 +138,17 @@ Collaborators do not need Codex, Python, or this repository on their own compute
 
 For a step-by-step beginner guide, see `docs/OBHRM_Literature_Monitor_GitHub_Actions_User_Guide.md`.
 
-Recommended group setup: create a GitHub Organization, host one central copy of this repository there, invite teachers/students to the organization, add them to a team such as `literature-monitor-users`, and grant that team at least `Write` access to the central repository. GitHub repository roles with `Write` access can run manual Actions workflows; `Read` or `Triage` is usually not enough for `Run workflow`.
+Recommended group setup: keep one central copy of this repository under the project maintainer's personal GitHub account, then invite trusted teachers/students as collaborators. Give collaborators enough access to run manual Actions workflows; `Write` is the practical default for this project because the workflow commits published `site/` updates back to the repository.
 
-An admin or maintainer should configure the central repository once:
+The project maintainer should configure the central repository once:
 
-1. Open the organization repository.
-2. Click `Settings` -> `Pages`.
-3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
-4. Add Lark repository secrets if needed:
+1. Open the central repository.
+2. Click `Settings` -> `Collaborators and teams`.
+3. Use `Add people` to invite teachers/students as collaborators.
+4. Grant the collaborators who need to run reports `Write` access.
+5. Click `Settings` -> `Pages`.
+6. Under `Build and deployment`, set `Source` to `GitHub Actions`.
+7. Add Lark repository secrets if needed:
    - `OBHRM_LARK_WEBHOOK_URL`
    - `OBHRM_LARK_WEBHOOK_SECRET`
 
@@ -172,8 +175,8 @@ Technical OpenAlex controls are intentionally hidden from the normal `Run workfl
 When `public_site_url` is blank, report links are generated from the running repository's GitHub Pages URL:
 
 ```text
-https://<owner-or-org>.github.io/<repo-name>/
-https://<owner-or-org>.github.io/<repo-name>/reports/<run-folder>/
+https://<owner>.github.io/<repo-name>/
+https://<owner>.github.io/<repo-name>/reports/<run-folder>/
 ```
 
 Forks are still supported as a fallback when a user cannot be added to the organization repository. In that case, the user must configure `Settings` -> `Pages` -> `Source` -> `GitHub Actions` in their own fork, and their reports will publish to that fork's Pages site rather than the central index.
